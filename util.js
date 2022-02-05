@@ -1,13 +1,11 @@
 const str = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
-
-const toHashCode = (url) => {
-  let hash = 0
+const toHashCode = (url, num) => {
+  let hash = num;
   for (let i = 0; i < url.length; i++) {
     let ch = url.charCodeAt(i)
-    hash = (hash << 5) - hash + ch
-    hash = hash & hash
+    hash += (hash << 5) + ch;
   }
-  return hash
+  return hash & 0x7FFFFFFF;
 }
 
 const to62HEX = (hash) => {

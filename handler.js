@@ -18,16 +18,16 @@ const long2Short = (req, res) => {
   }
 
   let val = req.body.url
-  let hash = toHashCode(val)
-  console.log(hash);
-  let key = to62HEX(hash)
+  let key = to62HEX(toHashCode(val, 0))
 
-  if (map.has(key)) {
-    res.json({ url: `${process.env.BASE_URL}/${key}` })
-  } else {
-    map.set(key, val)
-    res.json({ url: `${process.env.BASE_URL}/${key}` })
+  let i = 1
+  while (map.has(key)) {
+    key = to62HEX(toHashCode(val, i++))
   }
+
+  map.set(key, val)
+  console.log(map);
+  res.json({ url: `${process.env.BASE_URL}/${key}` })
 }
 
 module.exports = { short2Long, long2Short }
