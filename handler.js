@@ -1,3 +1,4 @@
+const { toHashCode, to62HEX } = require('./util')
 const map = new Map()
 
 const short2Long = (req, res) => {
@@ -12,19 +13,21 @@ const short2Long = (req, res) => {
 }
 
 const long2Short = (req, res) => {
-  if (!req.body || !req.body.key || !req.body.url) {
-    res.status(422).json({ error: 'missing required parameter'})
+  if (!req.body || !req.body.url) {
+    res.status(422).json({ error: 'missing required parameter' })
   }
-  
-  let key = req.body.key
+
   let val = req.body.url
+  let hash = toHashCode(val)
+  console.log(hash);
+  let key = to62HEX(hash)
 
   if (map.has(key)) {
     res.json({ url: `${process.env.BASE_URL}/${key}` })
+  } else {
+    map.set(key, val)
+    res.json({ url: `${process.env.BASE_URL}/${key}` })
   }
-  
-  map.set(key, val)
-  res.json({ url: `${process.env.BASE_URL}/${key}` })
 }
 
 module.exports = { short2Long, long2Short }
