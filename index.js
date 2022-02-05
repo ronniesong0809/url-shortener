@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const expressOasGenerator = require('express-oas-generator')
 const bodyParser = require('body-parser')
+const handler = require('./handler')
 const dotenv = require('dotenv')
 dotenv.config()
 
@@ -14,9 +15,8 @@ app.use(bodyParser.urlencoded({ extended: true }))
 expressOasGenerator.init(app, {})
 
 // endpoints
-app.get('/', (req, res) => {
-  res.json({ foo: 'bar' })
-})
+app.post('/shorten', handler.long2Short)
+app.get('/:url', handler.short2Long)
 
 app.listen(port, host, () => {
   console.log(`Server running at http://${host}:${port}/`)
