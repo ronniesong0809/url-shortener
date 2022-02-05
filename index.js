@@ -15,8 +15,8 @@ app.use(bodyParser.urlencoded({ extended: true }))
 expressOasGenerator.init(app, {})
 
 // endpoints
-app.post('/shorten', handler.long2Short)
 app.get('/:url', handler.short2Long)
+app.post('/shorten', handler.long2Short)
 
 app.listen(port, host, () => {
   console.log(`Server running at http://${host}:${port}/`)
