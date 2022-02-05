@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const handler = require('./handler')
 const dotenv = require('dotenv')
 dotenv.config()
+require('./utils/database')
 
 const host = process.env.HOST || 'localhost'
 const port = process.env.PORT || 3000
