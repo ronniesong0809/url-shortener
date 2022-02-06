@@ -20,6 +20,7 @@ expressOasGenerator.init(app, {})
 // endpoints
 app.get('/:url', handler.short2Long)
 app.post('/shorten', handler.long2Short)
+app.delete('/:url', handler.deleteRecord)
 
 app.listen(port, host, () => {
   console.log(`Server running at http://${host}:${port}/`)

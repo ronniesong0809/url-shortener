@@ -52,6 +52,18 @@ const long2Short = async (req, res) => {
   )
 }
 
+const deleteRecord = async (req, res) => {
+  let key = req.path.substring(1)
+
+  urlModel.deleteOne({ shortUrl: key }).then((result) => {
+    if (result.deletedCount == 0) {
+      res.status(404).json({ error: `${key} not found` })
+      return
+    }
+    res.status(200).json({ message: `${key} deleted` })
+  })
+}
+
 const generateUniqueKey = async (val) => {
   let key
   let i = 0
@@ -74,4 +86,4 @@ const longUrlExist = (val) => {
   return urlModel.findOne({ longUrl: val })
 }
 
-module.exports = { short2Long, long2Short }
+module.exports = { short2Long, long2Short, deleteRecord }
