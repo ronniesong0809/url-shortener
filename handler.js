@@ -13,7 +13,7 @@ const short2Long = (req, res) => {
       res.status(404).json({ error: 'unable to find URL to redirect to' })
       return
     }
-    res.redirect(302, `https://${url.longUrl}`)
+    res.redirect(302, `${url.longUrl}`)
   })
 }
 
@@ -29,16 +29,21 @@ const long2Short = async (req, res) => {
   let longExist = await longUrlExist(val)
   if (longExist) {
     res.status(200).json({
-      url: `${process.env.BASE_URL}/${key}`,
+      url: `${process.env.BASE_URL}/${longExist.shortUrl}`,
       message: 'url already exists'
     })
     return
   }
 
   urlModel.create(
-    { shortUrl: key, longUrl: val, timestamp: new Date() },
+    {
+      shortUrl: key,
+      longUrl: val,
+      timestamp: new Date()
+    },
     function (err) {
       if (err) {
+        console.log(err)
         res.status(500).json({ error: err })
         return
       }
@@ -66,7 +71,7 @@ const shortUrlExist = (key) => {
 }
 
 const longUrlExist = (val) => {
-  return urlModel.exists({ longUrl: val })
+  return urlModel.findOne({ longUrl: val })
 }
 
 module.exports = { short2Long, long2Short }
