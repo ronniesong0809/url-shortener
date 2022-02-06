@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const expressOasGenerator = require('express-oas-generator')
 const bodyParser = require('body-parser')
+const cors = require('cors')
 const handler = require('./handler')
 const dotenv = require('dotenv')
 dotenv.config()
@@ -13,6 +14,7 @@ const port = process.env.PORT || 3000
 // middleware
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+app.use(cors())
 expressOasGenerator.init(app, {})
 
 // endpoints

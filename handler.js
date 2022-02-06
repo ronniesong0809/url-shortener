@@ -4,18 +4,17 @@ const urlModel = require('./models/url')
 const short2Long = (req, res) => {
   let key = req.path.substring(1)
 
-  try {
-    urlModel.findOne({ $match: { shortUrl: key } }).then(function (response) {
-      let val = response.longUrl
-      if (val) {
-        res.redirect(302, `https://${val}`)
-      } else {
-        res.status(404).json({ error: 'unable to find URL to redirect to' })
-      }
-    })
-  } catch (err) {
-    res.status(500).json({ error: err })
-  }
+  urlModel.findOne({ shortUrl: key }, function (err, url) {
+    if (err) {
+      res.status(500).json({ error: err })
+      return
+    }
+    if (!url) {
+      res.status(404).json({ error: 'unable to find URL to redirect to' })
+      return
+    }
+    res.redirect(302, `https://${url.longUrl}`)
+  })
 }
 
 const long2Short = async (req, res) => {
