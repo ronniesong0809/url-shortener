@@ -64,6 +64,18 @@ const deleteRecord = async (req, res) => {
   })
 }
 
+const displayAllRecords = (req, res) => {
+  urlModel.find({}, function (err, urls) {
+    let map = []
+
+    urls.forEach(function (url) {
+      map.push(url)
+    })
+
+    res.send(map)
+  })
+}
+
 const generateUniqueKey = async (val) => {
   let key
   let i = 0
@@ -86,4 +98,4 @@ const longUrlExist = (val) => {
   return urlModel.findOne({ longUrl: val })
 }
 
-module.exports = { short2Long, long2Short, deleteRecord }
+module.exports = { short2Long, long2Short, deleteRecord, displayAllRecords }

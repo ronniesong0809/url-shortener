@@ -18,6 +18,7 @@ app.use(cors())
 expressOasGenerator.init(app, {})
 
 // endpoints
+app.get('/all', handler.displayAllRecords)
 app.get('/:url', handler.short2Long)
 app.post('/shorten', handler.long2Short)
 app.delete('/:url', handler.deleteRecord)
