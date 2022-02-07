@@ -6,6 +6,8 @@ Copyright (c) 2022 Ronnie Song
 
 An internal service for shortening URLs that keep track of quickly referenced internal tools, wiki pages, and external resources
 
+- Front End (WIP) is [here](https://github.com/ronniesong0809/url-shortener-react).
+
 ## Requirements and Features
 
 - Design RESTful API with analytics of usage
@@ -20,9 +22,9 @@ An internal service for shortening URLs that keep track of quickly referenced in
 
 Node, Express, MongoDB, Mongoose, express-oas-generator, jest, and supertest, Docker
 
-Install MongoDb by follow the [mongodb instruction](https://docs.mongodb.com/manual/installation/)
+- Install MongoDb by follow the [mongodb instruction](https://docs.mongodb.com/manual/installation/)
 
-Install Docker by follow the [docker instruction](https://docs.docker.com/get-docker/)
+- Install Docker by follow the [docker instruction](https://docs.docker.com/get-docker/)
 
 ## API Documentation
 
@@ -48,7 +50,7 @@ $ npm install
 
 ```
 $ docker build . -t <your username>/url-shortener
-$ docker run -p 5000:5000 -d ronniesong0809/url-shortener
+$ docker run -p 5000:5000 -d <your username>/url-shortener
 ```
 
 ## License
