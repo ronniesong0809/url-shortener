@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const expressOasGenerator = require('express-oas-generator')
+const { SPEC_OUTPUT_FILE_BEHAVIOR } = expressOasGenerator
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const handler = require('./handler')
@@ -15,6 +16,8 @@ const port = process.env.PORT || 3000
 // middleware
 expressOasGenerator.handleResponses(app, {
   mongooseModels: mongoose.modelNames(),
+  specOutputPath: './api_docs.json',
+  specOutputFileBehavior: SPEC_OUTPUT_FILE_BEHAVIOR.PRESERVE,
   alwaysServeDocs: true,
   swaggerUiServePath: 'api/docs'
 })

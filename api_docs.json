@@ -1,0 +1,261 @@
+{
+  "definitions": {
+    "URL": {
+      "title": "URL",
+      "properties": {
+        "shortUrl": {
+          "type": "string"
+        },
+        "longUrl": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "_id": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "host": "127.0.0.1:10610",
+  "info": {
+    "title": "url-shortener",
+    "version": "1.0.0",
+    "license": {
+      "name": "MIT"
+    },
+    "description": "Specification JSONs: [v2](/api-spec/v2), [v3](/api-spec/v3).\n\nAn internal service for shortening URLs that keep track of quickly referenced internal tools, wiki pages, and external resources"
+  },
+  "paths": {
+    "/all": {
+      "get": {
+        "summary": "/all",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "_id": {
+                    "type": "string"
+                  },
+                  "shortUrl": {
+                    "type": "string"
+                  },
+                  "longUrl": {
+                    "type": "string"
+                  },
+                  "timestamp": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "_id",
+                  "shortUrl",
+                  "longUrl",
+                  "timestamp"
+                ]
+              }
+            }
+          }
+        },
+        "tags": [],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/{url}": {
+      "get": {
+        "summary": "/{url}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "url",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "example": 123456
+          }
+        ],
+        "responses": {
+          "200": {},
+          "301": {
+            "description": "Moved Permanently",
+            "schema": {
+              "type": "string",
+              "example": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Redirecting</title>\n</head>\n<body>\n<pre>Redirecting to <a href=\"/api/docs/v3/\">/api/docs/v3/</a></pre>\n</body>\n</html>\n"
+            }
+          },
+          "302": {
+            "description": "Found",
+            "schema": {
+              "type": "string",
+              "example": "Found. Redirecting to https://github.com/ronniesong0809/url-shortener"
+            }
+          },
+          "304": {},
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "unable to find URL to redirect to"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "URL"
+        ],
+        "produces": [
+          "application/json",
+          "text/plain",
+          "application/javascript",
+          "text/html",
+          "text/css",
+          "image/png"
+        ]
+      },
+      "delete": {
+        "summary": "/{url}",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "url",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "example": 123456
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "2h2mYC deleted"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "123456 not found"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "URL"
+        ],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/shorten": {
+      "post": {
+        "summary": "/shorten",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "example": "https://github.com/ronniesong0809/url-shortener"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "example": "http://localhost:5000/2h2mYC"
+                },
+                "message": {
+                  "type": "string",
+                  "example": "url already exists"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "example": "http://localhost:5000/2h2mYC"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "example": "missing required parameter"
+                }
+              }
+            }
+          }
+        },
+        "tags": [],
+        "produces": [
+          "application/json"
+        ]
+      }
+    }
+  },
+  "schemes": [
+    "http"
+  ],
+  "swagger": "2.0",
+  "tags": [
+    {
+      "name": "URL"
+    }
+  ]
+}

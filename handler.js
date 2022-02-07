@@ -1,26 +1,26 @@
 const { toHashCode, to62HEX } = require('./utils/util')
 const urlModel = require('./models/url')
 
-const short2Long = (req, res) => {
+const short2Long = (req, res, next) => {
   let key = req.path.substring(1)
 
   urlModel.findOne({ shortUrl: key }, function (err, url) {
     if (err) {
       res.status(500).json({ error: err })
-      return
+      return next(err)
     }
     if (!url) {
       res.status(404).json({ error: 'unable to find URL to redirect to' })
-      return
+      return next()
     }
     res.redirect(302, `${url.longUrl}`)
   })
 }
 
-const long2Short = async (req, res) => {
+const long2Short = async (req, res, next) => {
   if (!req.body || !req.body.url) {
     res.status(422).json({ error: 'missing required parameter' })
-    return
+    return next()
   }
 
   let val = req.body.url
@@ -32,7 +32,7 @@ const long2Short = async (req, res) => {
       url: `${process.env.BASE_URL}/${longExist.shortUrl}`,
       message: 'url already exists'
     })
-    return
+    return next()
   }
 
   urlModel.create(
@@ -45,20 +45,20 @@ const long2Short = async (req, res) => {
       if (err) {
         console.log(err)
         res.status(500).json({ error: err })
-        return
+        return next(err)
       }
       res.status(201).json({ url: `${process.env.BASE_URL}/${key}` })
     }
   )
 }
 
-const deleteRecord = async (req, res) => {
+const deleteRecord = async (req, res, next) => {
   let key = req.path.substring(1)
 
   urlModel.deleteOne({ shortUrl: key }).then((result) => {
     if (result.deletedCount == 0) {
       res.status(404).json({ error: `${key} not found` })
-      return
+      return next()
     }
     res.status(200).json({ message: `${key} deleted` })
   })

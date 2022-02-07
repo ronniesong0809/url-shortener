@@ -1,0 +1,393 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "url-shortener",
+    "version": "1.0.0",
+    "license": {
+      "name": "MIT"
+    },
+    "description": "Specification JSONs: [v2](/api-spec/v2), [v3](/api-spec/v3).\n\nAn internal service for shortening URLs that keep track of quickly referenced internal tools, wiki pages, and external resources"
+  },
+  "paths": {
+    "/all": {
+      "get": {
+        "summary": "/all",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "string"
+                      },
+                      "shortUrl": {
+                        "type": "string"
+                      },
+                      "longUrl": {
+                        "type": "string"
+                      },
+                      "timestamp": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "_id",
+                      "shortUrl",
+                      "longUrl",
+                      "timestamp"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": []
+      }
+    },
+    "/{url}": {
+      "get": {
+        "summary": "/{url}",
+        "parameters": [
+          {
+            "name": "url",
+            "in": "path",
+            "required": true,
+            "example": 123456,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "301": {
+            "description": "Moved Permanently",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Redirecting</title>\n</head>\n<body>\n<pre>Redirecting to <a href=\"/api/docs/v3/\">/api/docs/v3/</a></pre>\n</body>\n</html>\n"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Redirecting</title>\n</head>\n<body>\n<pre>Redirecting to <a href=\"/api/docs/v3/\">/api/docs/v3/</a></pre>\n</body>\n</html>\n"
+                }
+              },
+              "application/javascript": {
+                "schema": {
+                  "type": "string",
+                  "example": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Redirecting</title>\n</head>\n<body>\n<pre>Redirecting to <a href=\"/api/docs/v3/\">/api/docs/v3/</a></pre>\n</body>\n</html>\n"
+                }
+              },
+              "text/html": {
+                "schema": {
+                  "type": "string",
+                  "example": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Redirecting</title>\n</head>\n<body>\n<pre>Redirecting to <a href=\"/api/docs/v3/\">/api/docs/v3/</a></pre>\n</body>\n</html>\n"
+                }
+              },
+              "text/css": {
+                "schema": {
+                  "type": "string",
+                  "example": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Redirecting</title>\n</head>\n<body>\n<pre>Redirecting to <a href=\"/api/docs/v3/\">/api/docs/v3/</a></pre>\n</body>\n</html>\n"
+                }
+              },
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "example": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Redirecting</title>\n</head>\n<body>\n<pre>Redirecting to <a href=\"/api/docs/v3/\">/api/docs/v3/</a></pre>\n</body>\n</html>\n"
+                }
+              }
+            }
+          },
+          "302": {
+            "description": "Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "example": "Found. Redirecting to https://github.com/ronniesong0809/url-shortener"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "example": "Found. Redirecting to https://github.com/ronniesong0809/url-shortener"
+                }
+              },
+              "application/javascript": {
+                "schema": {
+                  "type": "string",
+                  "example": "Found. Redirecting to https://github.com/ronniesong0809/url-shortener"
+                }
+              },
+              "text/html": {
+                "schema": {
+                  "type": "string",
+                  "example": "Found. Redirecting to https://github.com/ronniesong0809/url-shortener"
+                }
+              },
+              "text/css": {
+                "schema": {
+                  "type": "string",
+                  "example": "Found. Redirecting to https://github.com/ronniesong0809/url-shortener"
+                }
+              },
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "example": "Found. Redirecting to https://github.com/ronniesong0809/url-shortener"
+                }
+              }
+            }
+          },
+          "304": {
+            "description": ""
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "unable to find URL to redirect to"
+                    }
+                  }
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "unable to find URL to redirect to"
+                    }
+                  }
+                }
+              },
+              "application/javascript": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "unable to find URL to redirect to"
+                    }
+                  }
+                }
+              },
+              "text/html": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "unable to find URL to redirect to"
+                    }
+                  }
+                }
+              },
+              "text/css": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "unable to find URL to redirect to"
+                    }
+                  }
+                }
+              },
+              "image/png": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "unable to find URL to redirect to"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "URL"
+        ]
+      },
+      "delete": {
+        "summary": "/{url}",
+        "parameters": [
+          {
+            "name": "url",
+            "in": "path",
+            "required": true,
+            "example": 123456,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "2h2mYC deleted"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "123456 not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "URL"
+        ]
+      }
+    },
+    "/shorten": {
+      "post": {
+        "summary": "/shorten",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "url": {
+                    "type": "string",
+                    "example": "https://github.com/ronniesong0809/url-shortener"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "type": "string",
+                      "example": "http://localhost:5000/2h2mYC"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "url already exists"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "url": {
+                      "type": "string",
+                      "example": "http://localhost:5000/2h2mYC"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "missing required parameter"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": []
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "URL"
+    }
+  ],
+  "servers": [
+    {
+      "url": "http://127.0.0.1:10610"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "URL": {
+        "title": "URL",
+        "properties": {
+          "shortUrl": {
+            "type": "string"
+          },
+          "longUrl": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "_id": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
