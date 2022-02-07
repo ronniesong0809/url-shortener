@@ -47,7 +47,7 @@ const long2Short = async (req, res) => {
         res.status(500).json({ error: err })
         return
       }
-      res.status(200).json({ url: `${process.env.BASE_URL}/${key}` })
+      res.status(201).json({ url: `${process.env.BASE_URL}/${key}` })
     }
   )
 }
