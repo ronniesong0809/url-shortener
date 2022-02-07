@@ -28,8 +28,9 @@ const long2Short = async (req, res, next) => {
 
   let longExist = await longUrlExist(val)
   if (longExist) {
+    const BASE_URL = process.env.BASE_URL || 'http://localhost:5000'
     res.status(200).json({
-      url: `${process.env.BASE_URL}/${longExist.shortUrl}`,
+      url: `${BASE_URL}/${longExist.shortUrl}`,
       message: 'url already exists'
     })
     return next()
