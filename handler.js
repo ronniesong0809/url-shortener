@@ -1,5 +1,6 @@
 const { toHashCode, to62HEX } = require('./utils/util')
 const urlModel = require('./models/url')
+const counterSchema = require('./models/counter')
 
 const short2Long = (req, res, next) => {
   let key = req.path.substring(1)
@@ -21,7 +22,21 @@ const short2Long = (req, res, next) => {
       res.status(410).json({ error: 'this URL is expired' })
       return next()
     }
-    res.redirect(302, `${url.longUrl}`)
+
+    counterSchema.findByIdAndUpdate(
+      { _id: key },
+      { $inc: { seq: 1 } },
+      { new: true, upsert: true },
+      function (err) {
+        if (err) {
+          res.status(500).json({ error: err })
+          return next(err)
+        }
+
+        res.redirect(302, `${url.longUrl}`)
+        next()
+      }
+    )
   })
 }
 
@@ -56,7 +71,6 @@ const long2Short = async (req, res, next) => {
     },
     function (err) {
       if (err) {
-        console.log(err)
         res.status(500).json({ error: err })
         return next(err)
       }
