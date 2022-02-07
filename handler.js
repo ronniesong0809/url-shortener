@@ -4,13 +4,21 @@ const urlModel = require('./models/url')
 const short2Long = (req, res, next) => {
   let key = req.path.substring(1)
 
-  urlModel.findOne({ shortUrl: key }, function (err, url) {
+  urlModel.findOne({ shortKey: key }, function (err, url) {
     if (err) {
       res.status(500).json({ error: err })
       return next(err)
     }
     if (!url) {
       res.status(404).json({ error: 'unable to find URL to redirect to' })
+      return next()
+    }
+
+    let expire = new Date(url.timestamp)
+    expire.setDate(expire.getDate() + url.expiration)
+
+    if (url.expiration != 0 && expire <= new Date()) {
+      res.status(410).json({ error: 'this URL is expired' })
       return next()
     }
     res.redirect(302, `${url.longUrl}`)
@@ -23,23 +31,27 @@ const long2Short = async (req, res, next) => {
     return next()
   }
 
+  const BASE_URL = process.env.BASE_URL || 'http://localhost:5000'
   let val = req.body.url
   let key = await generateUniqueKey(val)
 
   let longExist = await longUrlExist(val)
   if (longExist) {
-    const BASE_URL = process.env.BASE_URL || 'http://localhost:5000'
     res.status(200).json({
-      url: `${BASE_URL}/${longExist.shortUrl}`,
+      url: `${BASE_URL}/${longExist.shortKey}`,
       message: 'url already exists'
     })
     return next()
   }
 
+  let expire = req.body.expiration ? req.body.expiration : 0
+
   urlModel.create(
     {
-      shortUrl: key,
+      shortKey: key,
+      shortUrl: `${BASE_URL}/${key}`,
       longUrl: val,
+      expiration: expire,
       timestamp: new Date()
     },
     function (err) {
@@ -56,7 +68,7 @@ const long2Short = async (req, res, next) => {
 const deleteRecord = async (req, res, next) => {
   let key = req.path.substring(1)
 
-  urlModel.deleteOne({ shortUrl: key }).then((result) => {
+  urlModel.deleteOne({ shortKey: key }).then((result) => {
     if (result.deletedCount == 0) {
       res.status(404).json({ error: `${key} not found` })
       return next()
@@ -83,7 +95,7 @@ const generateUniqueKey = async (val) => {
   let stopped = false
   while (!stopped) {
     key = to62HEX(toHashCode(val, i++))
-    let shortExist = await shortUrlExist(key)
+    let shortExist = await shortKeyExist(key)
     if (!shortExist) {
       stopped = true
     }
@@ -91,8 +103,8 @@ const generateUniqueKey = async (val) => {
   return key
 }
 
-const shortUrlExist = (key) => {
-  return urlModel.exists({ shortUrl: key })
+const shortKeyExist = (key) => {
+  return urlModel.exists({ shortKey: key })
 }
 
 const longUrlExist = (val) => {
