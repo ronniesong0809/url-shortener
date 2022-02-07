@@ -10,11 +10,11 @@ let urlSchema = new mongoose.Schema(
       required: false,
       min: 0,
       max: 7
-    },
-    timestamp: Date
+    }
   },
   {
-    versionKey: false
+    versionKey: false,
+    timestamps: true
   }
 )
 

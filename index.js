@@ -4,7 +4,8 @@ const expressOasGenerator = require('express-oas-generator')
 const { SPEC_OUTPUT_FILE_BEHAVIOR } = expressOasGenerator
 const bodyParser = require('body-parser')
 const cors = require('cors')
-const handler = require('./handler')
+const urlController = require('./controller/urlController')
+const counterController = require('./controller/counterController')
 const dotenv = require('dotenv')
 dotenv.config()
 const mongoose = require('mongoose')
@@ -26,10 +27,11 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
 
 // endpoints
-app.get('/all', handler.displayAllRecords)
-app.get('/:url', handler.short2Long)
-app.post('/shorten', handler.long2Short)
-app.delete('/:url', handler.deleteRecord)
+app.get('/all', urlController.displayAllRecords)
+app.get('/:url', urlController.short2Long)
+app.get('/:url/stats', counterController.getUrlStats)
+app.post('/shorten', urlController.long2Short)
+app.delete('/:url', urlController.deleteRecord)
 expressOasGenerator.handleRequests()
 
 app.listen(port, host, () => {

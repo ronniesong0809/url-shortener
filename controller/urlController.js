@@ -1,9 +1,9 @@
-const { toHashCode, to62HEX } = require('./utils/util')
-const urlModel = require('./models/url')
-const counterSchema = require('./models/counter')
+const { toHashCode, to62HEX } = require('../utils/util')
+const urlModel = require('../models/url')
+const counterSchema = require('../models/counter')
 
 const short2Long = (req, res, next) => {
-  let key = req.path.substring(1)
+  let key = req.params.url
 
   urlModel.findOne({ shortKey: key }, function (err, url) {
     if (err) {
@@ -15,7 +15,7 @@ const short2Long = (req, res, next) => {
       return next()
     }
 
-    let expire = new Date(url.timestamp)
+    let expire = new Date(url.createdDate)
     expire.setDate(expire.getDate() + url.expiration)
 
     if (url.expiration != 0 && expire <= new Date()) {
@@ -23,9 +23,11 @@ const short2Long = (req, res, next) => {
       return next()
     }
 
-    counterSchema.findByIdAndUpdate(
-      { _id: key },
-      { $inc: { seq: 1 } },
+    let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || null
+
+    counterSchema.findOneAndUpdate(
+      { shortKey: key },
+      { $inc: { clicks: 1 }, ip: ip },
       { new: true, upsert: true },
       function (err) {
         if (err) {
@@ -66,8 +68,7 @@ const long2Short = async (req, res, next) => {
       shortKey: key,
       shortUrl: `${BASE_URL}/${key}`,
       longUrl: val,
-      expiration: expire,
-      timestamp: new Date()
+      expiration: expire
     },
     function (err) {
       if (err) {

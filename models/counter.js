@@ -2,12 +2,13 @@ const mongoose = require('mongoose')
 
 let counterSchema = new mongoose.Schema(
   {
-    _id: { type: String, unique: false },
-    seq: { type: Number, default: 0 },
-    lastUpdate: Date
+    shortKey: { type: String, unique: false },
+    clicks: { type: Number, default: 0 },
+    ip: { type: String, unique: false }
   },
   {
-    versionKey: false
+    versionKey: false,
+    timestamps: true
   }
 )
 
