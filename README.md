@@ -28,13 +28,11 @@ Node, Express, MongoDB, Mongoose, express-oas-generator, jest, and supertest, Do
 
 ## API Documentation
 
-To check the API documentation which is automatically generated using express-oas-generator, go to https://shorturl.ronsong.live/api/docs
-
 #### URL Endpoint:
 
-https://shorturl.ronsong.live
+`(POST) https://shorturl.ronsong.live/shorten`
 
-##### Parameters:
+##### Body:
 
 - url: required
 
@@ -49,6 +47,9 @@ https://shorturl.ronsong.live
   ...
 ]
 ```
+...
+
+To check the API documentation which is automatically generated using express-oas-generator, go to https://shorturl.ronsong.live/api/docs
 
 ## Setup
 
