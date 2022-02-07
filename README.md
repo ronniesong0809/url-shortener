@@ -28,7 +28,27 @@ Node, Express, MongoDB, Mongoose, express-oas-generator, jest, and supertest, Do
 
 ## API Documentation
 
-To check the API documentation which is automatically generated using express-oas-generator, go to http://localhost:5000/api/docs
+To check the API documentation which is automatically generated using express-oas-generator, go to https://shorturl.ronsong.live/api/docs
+
+#### URL Endpoint:
+
+https://shorturl.ronsong.live
+
+##### Parameters:
+
+- url: required
+
+##### Response:
+
+```json
+[
+  ...
+  {
+    "url": "http://shorturl.ronsong.live/2h2mYC"
+  }
+  ...
+]
+```
 
 ## Setup
 
