@@ -92,15 +92,25 @@ const deleteRecord = async (req, res, next) => {
   })
 }
 
-const displayAllRecords = (req, res) => {
+const displayAllRecords = (req, res, next) => {
   urlModel.find({}, function (err, urls) {
-    let map = []
+    if (err) {
+      res.status(500).json({ error: err })
+      return next(err)
+    }
 
-    urls.forEach(function (url) {
-      map.push(url)
+    if (!urls) {
+      res.status(404).json({ error: `unable to find /all urls` })
+      return next()
+    }
+
+    let arr = []
+
+    urls.forEach(function (element) {
+      arr.push(element)
     })
 
-    res.send(map)
+    res.status(200).json(arr)
   })
 }
 
