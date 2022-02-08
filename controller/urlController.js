@@ -48,8 +48,16 @@ const long2Short = async (req, res, next) => {
     return next()
   }
 
-  const BASE_URL = process.env.BASE_URL || 'http://localhost:5000'
   let val = req.body.url
+  let regex =
+    /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)/
+
+  if (!val.match(regex)) {
+    res.status(422).json({ error: 'please enter a valid url' })
+    return next()
+  }
+
+  const BASE_URL = process.env.BASE_URL || 'http://localhost:5000'
   let key = await generateUniqueKey(val)
 
   let longExist = await longUrlExist(val)
