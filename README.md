@@ -1,5 +1,7 @@
 # Url Shortener
 [![API](https://img.shields.io/badge/API-deployed-green)](https://shorturl.ronsong.live/all)
+[![Node.js CI](https://github.com/ronniesong0809/url-shortener/actions/workflows/node.js.yml/badge.svg?branch=master)](https://github.com/ronniesong0809/url-shortener/actions/workflows/node.js.yml)
+[![Coverage Status](https://coveralls.io/repos/github/ronniesong0809/url-shortener/badge.svg?branch=master)](https://coveralls.io/github/ronniesong0809/url-shortener?branch=master)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/ronniesong0809/url-shortener/blob/master/LICENSE)
 
@@ -21,7 +23,7 @@ An internal service for shortening URLs that keep track of quickly referenced in
 
 ## Tech Stack and Tools
 
-Node, Express, MongoDB, Mongoose, express-oas-generator, jest, and supertest, Docker
+Node, Express, MongoDB, Mongoose, express-oas-generator, jest, supertest, GitHub Actions, Coveralls, and Docker
 
 - Install MongoDb by follow the [mongodb instruction](https://docs.mongodb.com/manual/installation/)
 
@@ -50,7 +52,7 @@ Node, Express, MongoDB, Mongoose, express-oas-generator, jest, and supertest, Do
 ```
 ...
 
-To check the API documentation which is automatically generated using express-oas-generator, go to https://shorturl.ronsong.live/api/docs
+To check the API documentation which is automatically generated using express-oas-generator, go to [shorturl.ronsong.live/api/docs](https://shorturl.ronsong.live/api/docs/v3)
 
 ## Setup
 
@@ -67,6 +69,12 @@ $ npm install
 3. Start the server by running `npm start`. or `npm dev` if you want the server to automatically restart on code changes during development
 
 4. The server can be accessed at `localhost:5000` using curl/wget, postman, or a similar API testing tool
+
+## Run Tests
+
+```
+$ npm test
+```
 
 ## Build and Deploy
 

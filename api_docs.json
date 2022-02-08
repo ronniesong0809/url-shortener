@@ -3,23 +3,59 @@
     "URL": {
       "title": "URL",
       "properties": {
+        "shortKey": {
+          "type": "string"
+        },
         "shortUrl": {
           "type": "string"
         },
         "longUrl": {
           "type": "string"
         },
-        "timestamp": {
-          "type": "string",
-          "format": "date-time"
+        "expiration": {
+          "type": "number",
+          "required": false
         },
         "_id": {
           "type": "string"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "Counter": {
+      "title": "Counter",
+      "properties": {
+        "shortKey": {
+          "type": "string"
+        },
+        "clicks": {
+          "type": "number"
+        },
+        "ip": {
+          "type": "string"
+        },
+        "_id": {
+          "type": "string"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
         }
       }
     }
   },
-  "host": "127.0.0.1:10610",
+  "host": "shorturl.ronsong.live",
   "info": {
     "title": "url-shortener",
     "version": "1.0.0",
@@ -47,21 +83,85 @@
                   "_id": {
                     "type": "string"
                   },
+                  "shortKey": {
+                    "type": "string"
+                  },
                   "shortUrl": {
                     "type": "string"
                   },
                   "longUrl": {
                     "type": "string"
                   },
-                  "timestamp": {
+                  "expiration": {
+                    "type": "number"
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "updatedAt": {
                     "type": "string"
                   }
                 },
                 "required": [
                   "_id",
+                  "shortKey",
                   "shortUrl",
                   "longUrl",
-                  "timestamp"
+                  "expiration",
+                  "createdAt",
+                  "updatedAt"
+                ]
+              }
+            }
+          }
+        },
+        "tags": [],
+        "produces": [
+          "application/json"
+        ]
+      }
+    },
+    "/all/stats": {
+      "get": {
+        "summary": "/all/stats",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "_id": {
+                    "type": "string"
+                  },
+                  "shortKey": {
+                    "type": "string"
+                  },
+                  "clicks": {
+                    "type": "number"
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "ip": {
+                    "type": "string"
+                  },
+                  "updatedAt": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "_id",
+                  "shortKey",
+                  "clicks",
+                  "createdAt",
+                  "ip",
+                  "updatedAt"
                 ]
               }
             }
@@ -84,19 +184,11 @@
             "name": "url",
             "in": "path",
             "required": true,
-            "type": "integer",
-            "example": 123456
+            "type": "string",
+            "example": "2h2mYC"
           }
         ],
         "responses": {
-          "200": {},
-          "301": {
-            "description": "Moved Permanently",
-            "schema": {
-              "type": "string",
-              "example": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Redirecting</title>\n</head>\n<body>\n<pre>Redirecting to <a href=\"/api/docs/v3/\">/api/docs/v3/</a></pre>\n</body>\n</html>\n"
-            }
-          },
           "302": {
             "description": "Found",
             "schema": {
@@ -104,7 +196,6 @@
               "example": "Found. Redirecting to https://github.com/ronniesong0809/url-shortener"
             }
           },
-          "304": {},
           "404": {
             "description": "Not Found",
             "schema": {
@@ -122,12 +213,8 @@
           "URL"
         ],
         "produces": [
-          "application/json",
           "text/plain",
-          "application/javascript",
-          "text/html",
-          "text/css",
-          "image/png"
+          "application/json"
         ]
       },
       "delete": {
@@ -140,8 +227,8 @@
             "name": "url",
             "in": "path",
             "required": true,
-            "type": "integer",
-            "example": 123456
+            "type": "string",
+            "example": "2h2mYC"
           }
         ],
         "responses": {
@@ -175,6 +262,27 @@
         ],
         "produces": [
           "application/json"
+        ]
+      }
+    },
+    "/{url}/stats": {
+      "get": {
+        "summary": "/{url}/stats",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "url",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "example": "2h2mYC"
+          }
+        ],
+        "responses": {},
+        "tags": [
+          "URL"
         ]
       }
     },
@@ -256,6 +364,9 @@
   "tags": [
     {
       "name": "URL"
+    },
+    {
+      "name": "Counter"
     }
   ]
 }

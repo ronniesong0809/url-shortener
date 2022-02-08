@@ -25,21 +25,82 @@
                       "_id": {
                         "type": "string"
                       },
+                      "shortKey": {
+                        "type": "string"
+                      },
                       "shortUrl": {
                         "type": "string"
                       },
                       "longUrl": {
                         "type": "string"
                       },
-                      "timestamp": {
+                      "expiration": {
+                        "type": "number"
+                      },
+                      "createdAt": {
+                        "type": "string"
+                      },
+                      "updatedAt": {
                         "type": "string"
                       }
                     },
                     "required": [
                       "_id",
+                      "shortKey",
                       "shortUrl",
                       "longUrl",
-                      "timestamp"
+                      "expiration",
+                      "createdAt",
+                      "updatedAt"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": []
+      }
+    },
+    "/all/stats": {
+      "get": {
+        "summary": "/all/stats",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "string"
+                      },
+                      "shortKey": {
+                        "type": "string"
+                      },
+                      "clicks": {
+                        "type": "number"
+                      },
+                      "createdAt": {
+                        "type": "string"
+                      },
+                      "ip": {
+                        "type": "string"
+                      },
+                      "updatedAt": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "_id",
+                      "shortKey",
+                      "clicks",
+                      "createdAt",
+                      "ip",
+                      "updatedAt"
                     ]
                   }
                 }
@@ -58,53 +119,86 @@
             "name": "url",
             "in": "path",
             "required": true,
-            "example": 123456,
+            "example": "2h2mYC",
             "schema": {
-              "type": "integer"
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": ""
-          },
-          "301": {
-            "description": "Moved Permanently",
+            "description": "OK",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "example": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Redirecting</title>\n</head>\n<body>\n<pre>Redirecting to <a href=\"/api/docs/v3/\">/api/docs/v3/</a></pre>\n</body>\n</html>\n"
-                }
-              },
               "text/plain": {
                 "schema": {
-                  "type": "string",
-                  "example": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Redirecting</title>\n</head>\n<body>\n<pre>Redirecting to <a href=\"/api/docs/v3/\">/api/docs/v3/</a></pre>\n</body>\n</html>\n"
+                  "type": "object",
+                  "properties": {
+                    "stats": {
+                      "type": "object",
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "example": "6201b5a5aa3f252495a47718"
+                        },
+                        "shortKey": {
+                          "type": "string",
+                          "example": "2h2mYC"
+                        },
+                        "clicks": {
+                          "type": "number",
+                          "example": 19
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "example": "2022-02-08T00:13:25.612Z"
+                        },
+                        "ip": {
+                          "type": "string",
+                          "example": "::ffff:127.0.0.1"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "example": "2022-02-08T02:41:04.833Z"
+                        }
+                      }
+                    }
+                  }
                 }
               },
-              "application/javascript": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "example": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Redirecting</title>\n</head>\n<body>\n<pre>Redirecting to <a href=\"/api/docs/v3/\">/api/docs/v3/</a></pre>\n</body>\n</html>\n"
-                }
-              },
-              "text/html": {
-                "schema": {
-                  "type": "string",
-                  "example": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Redirecting</title>\n</head>\n<body>\n<pre>Redirecting to <a href=\"/api/docs/v3/\">/api/docs/v3/</a></pre>\n</body>\n</html>\n"
-                }
-              },
-              "text/css": {
-                "schema": {
-                  "type": "string",
-                  "example": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Redirecting</title>\n</head>\n<body>\n<pre>Redirecting to <a href=\"/api/docs/v3/\">/api/docs/v3/</a></pre>\n</body>\n</html>\n"
-                }
-              },
-              "image/png": {
-                "schema": {
-                  "type": "string",
-                  "example": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Redirecting</title>\n</head>\n<body>\n<pre>Redirecting to <a href=\"/api/docs/v3/\">/api/docs/v3/</a></pre>\n</body>\n</html>\n"
+                  "type": "object",
+                  "properties": {
+                    "stats": {
+                      "type": "object",
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "example": "6201b5a5aa3f252495a47718"
+                        },
+                        "shortKey": {
+                          "type": "string",
+                          "example": "2h2mYC"
+                        },
+                        "clicks": {
+                          "type": "number",
+                          "example": 19
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "example": "2022-02-08T00:13:25.612Z"
+                        },
+                        "ip": {
+                          "type": "string",
+                          "example": "::ffff:127.0.0.1"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "example": "2022-02-08T02:41:04.833Z"
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -112,37 +206,13 @@
           "302": {
             "description": "Found",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "example": "Found. Redirecting to https://github.com/ronniesong0809/url-shortener"
-                }
-              },
               "text/plain": {
                 "schema": {
                   "type": "string",
                   "example": "Found. Redirecting to https://github.com/ronniesong0809/url-shortener"
                 }
               },
-              "application/javascript": {
-                "schema": {
-                  "type": "string",
-                  "example": "Found. Redirecting to https://github.com/ronniesong0809/url-shortener"
-                }
-              },
-              "text/html": {
-                "schema": {
-                  "type": "string",
-                  "example": "Found. Redirecting to https://github.com/ronniesong0809/url-shortener"
-                }
-              },
-              "text/css": {
-                "schema": {
-                  "type": "string",
-                  "example": "Found. Redirecting to https://github.com/ronniesong0809/url-shortener"
-                }
-              },
-              "image/png": {
+              "application/json": {
                 "schema": {
                   "type": "string",
                   "example": "Found. Redirecting to https://github.com/ronniesong0809/url-shortener"
@@ -150,23 +220,9 @@
               }
             }
           },
-          "304": {
-            "description": ""
-          },
           "404": {
             "description": "Not Found",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string",
-                      "example": "unable to find URL to redirect to"
-                    }
-                  }
-                }
-              },
               "text/plain": {
                 "schema": {
                   "type": "object",
@@ -178,40 +234,7 @@
                   }
                 }
               },
-              "application/javascript": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string",
-                      "example": "unable to find URL to redirect to"
-                    }
-                  }
-                }
-              },
-              "text/html": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string",
-                      "example": "unable to find URL to redirect to"
-                    }
-                  }
-                }
-              },
-              "text/css": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "error": {
-                      "type": "string",
-                      "example": "unable to find URL to redirect to"
-                    }
-                  }
-                }
-              },
-              "image/png": {
+              "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
@@ -236,9 +259,9 @@
             "name": "url",
             "in": "path",
             "required": true,
-            "example": 123456,
+            "example": "2h2mYC",
             "schema": {
-              "type": "integer"
+              "type": "string"
             }
           }
         ],
@@ -276,6 +299,26 @@
             }
           }
         },
+        "tags": [
+          "URL"
+        ]
+      }
+    },
+    "/{url}/stats": {
+      "get": {
+        "summary": "/{url}/stats",
+        "parameters": [
+          {
+            "name": "url",
+            "in": "path",
+            "required": true,
+            "example": "2h2mYC/stats",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {},
         "tags": [
           "URL"
         ]
@@ -361,11 +404,14 @@
   "tags": [
     {
       "name": "URL"
+    },
+    {
+      "name": "Counter"
     }
   ],
   "servers": [
     {
-      "url": "http://127.0.0.1:10610"
+      "url": "https://shorturl.ronsong.live"
     }
   ],
   "components": {
@@ -373,18 +419,53 @@
       "URL": {
         "title": "URL",
         "properties": {
+          "shortKey": {
+            "type": "string"
+          },
           "shortUrl": {
             "type": "string"
           },
           "longUrl": {
             "type": "string"
           },
-          "timestamp": {
-            "type": "string",
-            "format": "date-time"
+          "expiration": {
+            "type": "number"
           },
           "_id": {
             "type": "string"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Counter": {
+        "title": "Counter",
+        "properties": {
+          "shortKey": {
+            "type": "string"
+          },
+          "clicks": {
+            "type": "number"
+          },
+          "ip": {
+            "type": "string"
+          },
+          "_id": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       }
