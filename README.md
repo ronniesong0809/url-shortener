@@ -9,7 +9,9 @@ Copyright (c) 2022 Ronnie Song
 
 An internal service for shortening URLs that keep track of quickly referenced internal tools, wiki pages, and external resources
 
-- Front End (WIP) is [here](https://github.com/ronniesong0809/url-shortener-react).
+- Frontend: [Live demo](https://url.ronsong.live/), [repository](https://github.com/ronniesong0809/url-shortener-react)
+
+- Backend: [Live demo](http://shorturl.ronsong.live/all), [repository](https://github.com/ronniesong0809/url-shortener)
 
 ## Requirements and Features
 
@@ -28,6 +30,10 @@ Node, Express, MongoDB, Mongoose, express-oas-generator, jest, supertest, GitHub
 - Install MongoDb by follow the [mongodb instruction](https://docs.mongodb.com/manual/installation/)
 
 - Install Docker by follow the [docker instruction](https://docs.docker.com/get-docker/)
+
+## Frontend Repository
+
+To check the React frontend repository, go to [github.com/ronniesong0809/url-shortener-react](https://github.com/ronniesong0809/url-shortener-react)
 
 ## API Documentation
 
@@ -50,6 +56,17 @@ Node, Express, MongoDB, Mongoose, express-oas-generator, jest, supertest, GitHub
   ...
 ]
 ```
+
+`(GET) https://shorturl.ronsong.live/{shortUrlKey}`
+
+`(GET) https://shorturl.ronsong.live/{shortUrlKey}/stats`
+
+`(DELETE) https://shorturl.ronsong.live/{shortUrlKey}`
+
+`(GET) https://shorturl.ronsong.live/all`
+
+`(GET) https://shorturl.ronsong.live/all/stats`
+
 ...
 
 To check the API documentation which is automatically generated using express-oas-generator, go to [shorturl.ronsong.live/api/docs](https://shorturl.ronsong.live/api/docs/v3)
