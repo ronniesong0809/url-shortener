@@ -41,6 +41,34 @@ describe('Testing the get /{url} API with the correct short url', () => {
   })
 })
 
+describe('Testing the get /all API to display all urls', () => {
+  it('GET /all', async () => {
+    const response = await request(app).get('/all')
+    expect(response.status).toBe(200)
+  })
+})
+
+describe('Testing the get /{url}/stats API with the incorrect short url', () => {
+  it('GET /{url}/stats', async () => {
+    const response = await request(app).get('/123456/stats')
+    expect(response.status).toBe(404)
+  })
+})
+
+describe('Testing the get /{url}/stats API with the correct short url', () => {
+  it('GET /{url}/stats', async () => {
+    const response = await request(app).get('/2h2mYC/stats')
+    expect(response.status).toBe(200)
+  })
+})
+
+describe('Testing the get /all/stats API to display all stats', () => {
+  it('GET /all/stats', async () => {
+    const response = await request(app).get('/all/stats')
+    expect(response.status).toBe(200)
+  })
+})
+
 describe('Testing the delete /{url} API with the incorrect short url', () => {
   it('DELETE /{url}', async () => {
     const response = await request(app).delete('/123456')
@@ -51,13 +79,6 @@ describe('Testing the delete /{url} API with the incorrect short url', () => {
 describe('Testing the delete /{url} API with the correct short url', () => {
   it('DELETE /{url}', async () => {
     const response = await request(app).delete('/2h2mYC')
-    expect(response.status).toBe(200)
-  })
-})
-
-describe('Testing the get /all API to display all urls', () => {
-  it('POST /all', async () => {
-    const response = await request(app).get('/all')
     expect(response.status).toBe(200)
   })
 })
