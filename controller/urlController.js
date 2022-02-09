@@ -1,6 +1,8 @@
 const { toHashCode, to62HEX } = require('../utils/util')
 const urlModel = require('../models/url')
 const counterSchema = require('../models/counter')
+const dayjs = require('dayjs')
+dayjs().format()
 
 const short2Long = (req, res, next) => {
   let key = req.params.url
@@ -15,10 +17,9 @@ const short2Long = (req, res, next) => {
       return next()
     }
 
-    let expire = new Date(url.createdDate)
-    expire.setDate(expire.getDate() + url.expiration)
-
-    if (url.expiration != 0 && expire <= new Date()) {
+    let expire = dayjs(url.createdAt).add(url.expiration, 'day')
+    let today = dayjs(new Date())
+    if (url.expiration != 0 && expire.isBefore(today)) {
       res.status(410).json({ error: 'this URL is expired' })
       return next()
     }
