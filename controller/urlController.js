@@ -25,10 +25,11 @@ const short2Long = (req, res, next) => {
     }
 
     let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || null
+    let userAgent = req.headers['user-agent'] || null
 
     counterSchema.findOneAndUpdate(
       { shortKey: key },
-      { $inc: { clicks: 1 }, ip: ip },
+      { $inc: { clicks: 1 }, ip: ip, userAgent: userAgent },
       { new: true, upsert: true },
       function (err) {
         if (err) {
