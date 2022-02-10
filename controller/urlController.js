@@ -20,7 +20,7 @@ const short2Long = (req, res, next) => {
     let expire = dayjs(url.createdAt).add(url.expiration, 'day')
     let today = dayjs(new Date())
     if (url.expiration != 0 && expire.isBefore(today)) {
-      res.status(410).json({ error: 'this URL is expired' })
+      res.redirect(302, `${process.env.FRONTEND_BASE_URL}/${key}/error`)
       return next()
     }
 
