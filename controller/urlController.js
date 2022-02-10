@@ -103,7 +103,7 @@ const deleteRecord = async (req, res, next) => {
 }
 
 const displayAllRecords = (req, res, next) => {
-  urlModel.find({}, function (err, urls) {
+  urlModel.find({}, null, { sort: { createdAt: -1 } }, function (err, urls) {
     if (err) {
       res.status(500).json({ error: err })
       return next(err)
