@@ -73,6 +73,8 @@ To check the API documentation which is automatically generated using express-oa
 
 ## Setup
 
+### Local Setup
+
 1. Fork/clone this repo, then download and install packages/dependencies
 
 ```
@@ -81,23 +83,32 @@ $ cd url-shortener
 $ npm install
 ```
 
+2. Install MongoDB follow the [mongodb instruction](https://docs.mongodb.com/manual/installation/) if needed
 2. Copy the `.env.example` to `.env`, and replace any entries in .env with your own values
 
 3. Start the server by running `npm start`. or `npm dev` if you want the server to automatically restart on code changes during development
 
 4. The server can be accessed at `localhost:5000` using curl/wget, postman, or a similar API testing tool
 
+### Docker Setup
+
+1. Fork/clone this repo, then download
+
+```
+$ git clone git@github.com:ronniesong0809/url-shortener.git
+$ cd url-shortener
+```
+
+2. Install the new Docker Desktop follow the [docker instruction](https://docs.docker.com/get-docker/) if needed
+
+3. Copy the `.env.dev.example` to `.env.dev`, and replace any entries in .env with your own values
+
+4. Start the server by running `docker-compose up`
+
 ## Run Tests
 
 ```
 $ npm test
-```
-
-## Build and Deploy
-
-```
-$ docker build . -t <your username>/url-shortener
-$ docker run -p 5000:5000 -d <your username>/url-shortener
 ```
 
 ## License

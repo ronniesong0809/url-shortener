@@ -1,0 +1,28 @@
+version: '3'
+services:
+  app: 
+    env_file: .env.dev
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: shortener-url
+    restart: always
+    ports: 
+      - 5000:5000
+    volumes:
+      - ./app
+    working_dir: /app
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+  mongo-express:
+    image: mongo-express:0.54
+    restart: always
+    ports:
+      - 8081:8081
+    depends_on:
+      - mongo
