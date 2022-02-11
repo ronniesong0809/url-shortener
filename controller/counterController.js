@@ -1,43 +1,39 @@
 const counterSchema = require('../models/counter')
 
-const getUrlStats = async (req, res, next) => {
-  let key = req.params.url
-
-  counterSchema.findOne({ shortKey: key }, function (err, stats) {
-    if (err) {
-      res.status(500).json({ error: err })
-      return next(err)
-    }
+// GET /{:url}/stats
+const getUrlStats = async (req, res) => {
+  try {
+    let key = req.params.url
+    let stats = await counterSchema.findOne({ shortKey: key })
 
     if (!stats) {
-      res.status(404).json({ error: `unable to find /${key} stats` })
-      return next()
+      return res.status(404).json({ error: `unable to find /${key} stats` })
     }
 
-    res.status(200).json({ stats })
-  })
+    return res.status(200).json({ stats })
+  } catch (err) {
+    return res.status(500).json({ error: err.message })
+  }
 }
 
-const getAllUrlsStats = async (req, res, next) => {
-  counterSchema.find({}, function (err, stats) {
-    if (err) {
-      res.status(500).json({ error: err })
-      return next(err)
-    }
+// GET /all/stats
+const getAllUrlsStats = async (req, res) => {
+  try {
+    let stats = await counterSchema.find({})
 
     if (!stats) {
-      res.status(404).json({ error: `unable to find /all stats` })
-      return next()
+      return res.status(404).json({ error: `unable to find /all stats` })
     }
 
     let arr = []
-
     stats.forEach(function (element) {
       arr.push(element)
     })
 
-    res.status(200).json(arr)
-  })
+    return res.status(200).json(arr)
+  } catch (err) {
+    return res.status(500).json({ error: err.message })
+  }
 }
 
 module.exports = { getUrlStats, getAllUrlsStats }
