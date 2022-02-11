@@ -1,4 +1,5 @@
 # Url Shortener
+
 [![API](https://img.shields.io/badge/API-deployed-green)](https://shorturl.ronsong.live/all)
 [![Node.js CI](https://github.com/ronniesong0809/url-shortener/actions/workflows/node.js.yml/badge.svg?branch=master)](https://github.com/ronniesong0809/url-shortener/actions/workflows/node.js.yml)
 [![Coverage Status](https://coveralls.io/repos/github/ronniesong0809/url-shortener/badge.svg?branch=master)](https://coveralls.io/github/ronniesong0809/url-shortener?branch=master)
@@ -11,7 +12,7 @@ An internal service for shortening URLs that keep track of quickly referenced in
 
 - Frontend: [Live demo](https://url.ronsong.live/), [repository](https://github.com/ronniesong0809/url-shortener-react)
 
-- Backend: [Live demo](http://shorturl.ronsong.live/all), [repository](https://github.com/ronniesong0809/url-shortener)
+- Backend: [Live demo](https://shorturl.ronsong.live/all), [repository](https://github.com/ronniesong0809/url-shortener)
 
 ## Requirements and Features
 
@@ -44,30 +45,28 @@ To check the React frontend repository, go to [github.com/ronniesong0809/url-sho
 ##### Body:
 
 - url: required
+- expiration: optional
 
 ##### Response:
 
 ```json
-[
-  ...
-  {
-    "url": "http://shorturl.ronsong.live/2h2mYC"
-  }
-  ...
-]
+{
+  "url": "http://shorturl.ronsong.live/2h2mYC"
+}
 ```
 
-`(GET) https://shorturl.ronsong.live/{shortUrlKey}`
+---
 
-`(GET) https://shorturl.ronsong.live/{shortUrlKey}/stats`
+| Method | Endpoint | Params |
+| --- | --- | --- |
+| POST | `shorturl.ronsong.live/shorten` | Body: `url(required)`, `expiration(optional)` |
+| GET | `shorturl.ronsong.live/{key}` | Path: `key(required)` |
+| GET | `shorturl.ronsong.live/{key}/stats` | Path: `key(required)` |
+| DELETE | `shorturl.ronsong.live/{key}` | Path: `key(required)` |
+| GET | `shorturl.ronsong.live/all` | `none` |
+| GET | `shorturl.ronsong.live/all/stats` | `none` |
 
-`(DELETE) https://shorturl.ronsong.live/{shortUrlKey}`
-
-`(GET) https://shorturl.ronsong.live/all`
-
-`(GET) https://shorturl.ronsong.live/all/stats`
-
-...
+---
 
 To check the API documentation which is automatically generated using express-oas-generator, go to [shorturl.ronsong.live/api/docs](https://shorturl.ronsong.live/api/docs/v3)
 
@@ -84,11 +83,12 @@ $ npm install
 ```
 
 2. Install MongoDB follow the [mongodb instruction](https://docs.mongodb.com/manual/installation/) if needed
-2. Copy the `.env.example` to `.env`, and replace any entries in .env with your own values
 
-3. Start the server by running `npm start`. or `npm dev` if you want the server to automatically restart on code changes during development
+3. Copy the `.env.example` to `.env`, and replace any entries in .env with your own values
 
-4. The server can be accessed at `localhost:5000` using curl/wget, postman, or a similar API testing tool
+4. Start the server by running `npm start`. or `npm dev` if you want the server to automatically restart on code changes during development
+
+5. The server can be accessed at `localhost:5000` using curl/wget, postman, or a similar API testing tool
 
 ### Docker Setup
 
@@ -112,4 +112,5 @@ $ npm test
 ```
 
 ## License
-This program is licensed under the "MIT License". Please see the file LICENSE in the source distribution of this software for license terms.
+
+This source code is licensed under the "MIT License". Please see the [`LICENSE`](https://github.com/ronniesong0809/url-shortener/blob/master/LICENSE) file in the root directory of this source tree for license terms.
