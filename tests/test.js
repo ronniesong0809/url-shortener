@@ -69,6 +69,32 @@ describe('Testing the get /all/stats API to display all stats', () => {
   })
 })
 
+describe('Testing the put /{url} API without request body', () => {
+  it('PUT /{url}', async () => {
+    const response = await request(app)
+      .put('/2h2mYC')
+    expect(response.status).toBe(422)
+  })
+})
+
+describe('Testing the put /{url} API with the incorrect short url', () => {
+  it('PUT /{url}', async () => {
+    const response = await request(app)
+      .put('/123456')
+      .send({ expiration: 7 })
+    expect(response.status).toBe(404)
+  })
+})
+
+describe('Testing the put /{url} API with request body', () => {
+  it('PUT /{url}', async () => {
+    const response = await request(app)
+      .put('/2h2mYC')
+      .send({ expiration: 7 })
+    expect(response.status).toBe(200)
+  })
+})
+
 describe('Testing the delete /{url} API with the incorrect short url', () => {
   it('DELETE /{url}', async () => {
     const response = await request(app).delete('/123456')

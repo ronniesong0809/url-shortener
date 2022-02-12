@@ -52,15 +52,21 @@ const long2Short = async (req, res) => {
     }
 
     const BASE_URL = process.env.BASE_URL || 'http://localhost:5000'
-    let key = await generateUniqueKey(val)
 
     let longExist = await urlModel.findOne({ longUrl: val })
     if (longExist) {
+      let result = await urlModel.findOneAndUpdate(
+        { longUrl: val },
+        { expiration: req.body.expiration ? req.body.expiration : 0 }
+      )
+
       return res.status(200).json({
-        url: `${BASE_URL}/${longExist.shortKey}`,
-        message: 'url already exists'
+        url: `${BASE_URL}/${result.shortKey}`,
+        message: 'successfully updated'
       })
     }
+
+    let key = await generateUniqueKey(val)
 
     await urlModel.create({
       shortKey: key,
@@ -69,7 +75,10 @@ const long2Short = async (req, res) => {
       expiration: req.body.expiration ? req.body.expiration : 0
     })
 
-    return res.status(201).json({ url: `${process.env.BASE_URL}/${key}` })
+    return res.status(201).json({
+      url: `${BASE_URL}/${key}`,
+      message: 'successfully generated short url!'
+    })
   } catch (err) {
     return res.status(500).json({ error: err.message })
   }
@@ -110,6 +119,34 @@ const displayAllRecords = async (req, res) => {
   }
 }
 
+// PUT /{:url}
+const extendExpiration = async (req, res) => {
+  try {
+    if (!req.body || !req.body.expiration) {
+      return res.status(422).json({ error: 'missing required parameter' })
+    }
+
+    let key = req.params.url
+    const BASE_URL = process.env.BASE_URL || 'http://localhost:5000'
+
+    let result = await urlModel.findOneAndUpdate(
+      { shortKey: key },
+      { expiration: req.body.expiration ? req.body.expiration : 0 }
+    )
+
+    if (!result) {
+      return res.status(404).json({ error: `${key} not found` })
+    }
+
+    return res.status(200).json({
+      url: `${BASE_URL}/${result.shortKey}`,
+      message: 'successfully updated'
+    })
+  } catch (err) {
+    return res.status(500).json({ error: err.message })
+  }
+}
+
 const generateUniqueKey = async (val) => {
   let key
   let i = 0
@@ -124,4 +161,10 @@ const generateUniqueKey = async (val) => {
   return key
 }
 
-module.exports = { short2Long, long2Short, deleteRecord, displayAllRecords }
+module.exports = {
+  short2Long,
+  long2Short,
+  deleteRecord,
+  displayAllRecords,
+  extendExpiration
+}

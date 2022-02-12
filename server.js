@@ -29,6 +29,7 @@ app.get('/all/stats', counterController.getAllUrlsStats)
 app.get('/:url', urlController.short2Long)
 app.get('/:url/stats', counterController.getUrlStats)
 app.post('/shorten', urlController.long2Short)
+app.put('/:url', urlController.extendExpiration)
 app.delete('/:url', urlController.deleteRecord)
 expressOasGenerator.handleRequests()
 
