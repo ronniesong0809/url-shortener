@@ -76,8 +76,7 @@ const long2Short = async (req, res) => {
     })
 
     return res.status(201).json({
-      url: `${BASE_URL}/${key}`,
-      message: 'successfully generated short url!'
+      url: `${BASE_URL}/${key}`
     })
   } catch (err) {
     return res.status(500).json({ error: err.message })
