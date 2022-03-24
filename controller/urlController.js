@@ -16,7 +16,7 @@ const short2Long = async (req, res) => {
         .json({ error: 'unable to find URL to redirect to' })
     }
 
-    let expire = dayjs(url.createdAt).add(url.expiration, 'day')
+    let expire = dayjs(url.updatedAt).add(url.expiration, 'day')
     let today = dayjs(new Date())
     if (url.expiration !== 0 && expire.isBefore(today)) {
       return res.redirect(302, `${process.env.FRONTEND_BASE_URL}/${key}/error`)
