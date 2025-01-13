@@ -1,4 +1,4 @@
-const { toHashCode, to62HEX } = require('../utils/util')
+const { toHashCode, to62HEX } = require('../lib/hashUtils.js')
 const urlModel = require('../models/url')
 const counterSchema = require('../models/counter')
 const dayjs = require('dayjs')

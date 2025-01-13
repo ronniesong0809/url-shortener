@@ -4,8 +4,8 @@
   "description": "An internal service for shortening URLs that keep track of quickly referenced internal tools, wiki pages, and external resources",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
     "test": "jest --verbose --coverage --forceExit --runInBand",
     "coverage": "npm run test && cat ./coverage/lcov.info | coveralls"
   },
