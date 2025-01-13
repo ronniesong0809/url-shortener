@@ -1,20 +1,20 @@
-const Url = require('../models/url')
+const ShortUrl = require('../models/shortUrlModel')
 const { toHashCode, to62HEX } = require('../lib/hashUtils')
 
-class UrlService {
+class ShortUrlService {
   async getAllUrls() {
-    return await Url.find({})
+    return await ShortUrl.find({})
   }
 
   async getUrlByShortUrl(shortUrl) {
-    return await Url.findOne({ shortUrl })
+    return await ShortUrl.findOne({ shortUrl })
   }
 
   async createShortUrl(longUrl, customExpiration) {
     const hash = toHashCode(longUrl, Date.now())
     const shortUrl = to62HEX(hash)
     
-    const url = new Url({
+    const url = new ShortUrl({
       longUrl,
       shortUrl,
       ...(customExpiration && { expiresAt: customExpiration })
@@ -24,7 +24,7 @@ class UrlService {
   }
 
   async extendUrlExpiration(shortUrl, newExpiration) {
-    return await Url.findOneAndUpdate(
+    return await ShortUrl.findOneAndUpdate(
       { shortUrl },
       { expiresAt: newExpiration },
       { new: true }
@@ -32,8 +32,8 @@ class UrlService {
   }
 
   async deleteUrl(shortUrl) {
-    return await Url.findOneAndDelete({ shortUrl })
+    return await ShortUrl.findOneAndDelete({ shortUrl })
   }
 }
 
-module.exports = new UrlService()
+module.exports = new ShortUrlService()

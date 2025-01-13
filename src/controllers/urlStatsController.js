@@ -1,4 +1,4 @@
-const counterSchema = require('../models/counter')
+const counterSchema = require('../models/urlStatsModel.js')
 
 // GET /{:url}/stats
 const getUrlStats = async (req, res) => {

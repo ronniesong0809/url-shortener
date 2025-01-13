@@ -1,6 +1,6 @@
 const { toHashCode, to62HEX } = require('../lib/hashUtils.js')
-const urlModel = require('../models/url')
-const counterSchema = require('../models/counter')
+const urlModel = require('../models/shortUrlModel.js')
+const counterSchema = require('../models/urlStatsModel.js')
 const dayjs = require('dayjs')
 dayjs().format()
 
