@@ -1,6 +1,7 @@
 const { toHashCode, to62HEX } = require('../lib/hashUtils.js')
 const urlModel = require('../models/shortUrlModel.js')
 const statsModel = require('../models/urlStatsModel.js')
+const { fetchMetadata } = require('../lib/metadataUtils.js')
 const dayjs = require('dayjs')
 dayjs().format()
 
@@ -44,40 +45,51 @@ const long2Short = async (req, res) => {
     }
 
     let val = req.body.url
-    let regex =
-      /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()!@:%_\+.~#?&\/\/=]*)/
-
-    if (!val.match(regex)) {
-      return res.status(422).json({ error: 'please enter a valid url' })
-    }
-
     const BASE_URL = process.env.BASE_URL || 'http://localhost:5000'
 
-    let longExist = await urlModel.findOne({ longUrl: val })
-    if (longExist) {
+    const metadata = await fetchMetadata(val, res.locals.urlResponse)
+    const isExist = await urlModel.findOne({ longUrl: val })
+    if (isExist) {
       let result = await urlModel.findOneAndUpdate(
         { longUrl: val },
-        { expiration: req.body.expiration ? req.body.expiration : 0 }
+        {
+          expiration: req.body.expiration ? req.body.expiration : 0,
+          title: metadata.title,
+          description: metadata.description,
+          hostname: metadata.hostname,
+        }
       )
 
       return res.status(200).json({
         url: `${BASE_URL}/${result.shortKey}`,
+        metadata: metadata,
         message: 'successfully updated'
       })
     }
 
-    let key = await generateUniqueKey(val)
+    const key = await generateUniqueKey(val)
 
     await urlModel.create({
       shortKey: key,
       shortUrl: `${BASE_URL}/${key}`,
       longUrl: val,
+      title: metadata.title,
+      description: metadata.description,
+      hostname: metadata.hostname,
       expiration: req.body.expiration ? req.body.expiration : 0
     })
 
-    return res.status(201).json({
-      url: `${BASE_URL}/${key}`
-    })
+    const response = {
+      url: `${BASE_URL}/${key}`,
+      metadata: metadata
+    }
+
+    // Add warning if present
+    if (res.locals.urlWarning) {
+      response.warning = res.locals.urlWarning
+    }
+
+    return res.status(201).json(response)
   } catch (err) {
     return res.status(500).json({ error: err.message })
   }
@@ -106,7 +118,7 @@ const displayAllRecords = async (req, res) => {
     const skip = (page - 1) * limit
 
     const [urls, total] = await Promise.all([
-      urlModel.find({}, null, { 
+      urlModel.find({}, null, {
         sort: { createdAt: -1 },
         skip: skip,
         limit: limit

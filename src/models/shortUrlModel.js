@@ -1,21 +1,44 @@
 const mongoose = require('mongoose')
 
-let urlSchema = new mongoose.Schema(
+const urlSchema = new mongoose.Schema(
   {
-    shortKey: { type: String, unique: true },
-    shortUrl: { type: String, unique: true },
-    longUrl: { type: String, unique: false },
+    shortKey: {
+      type: String,
+      required: true,
+      unique: true
+    },
+    shortUrl: {
+      type: String,
+      required: true
+    },
+    longUrl: {
+      type: String,
+      required: true
+    },
+    name: {
+      type: String,
+      required: true
+    },
+    title: {
+      type: String,
+      default: ''
+    },
+    description: {
+      type: String,
+      default: ''
+    },
+    hostname: {
+      type: String,
+      required: true
+    },
     expiration: {
       type: Number,
-      required: false,
-      min: 0,
-      max: 7
+      default: 0
     }
   },
   {
-    versionKey: false,
     timestamps: true
   }
 )
 
-module.exports = mongoose.model('URL', urlSchema, 'url')
+module.exports = mongoose.model('Url', urlSchema, 'url')
