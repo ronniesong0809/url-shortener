@@ -8,17 +8,16 @@ const visitSchema = new mongoose.Schema({
   userAgent: {
     type: String,
     required: true
-  },
-  timestamp: {
-    type: Date,
-    default: Date.now
   }
+}, {
+  timestamps: true,
+  versionKey: false,
 })
 
 let counterSchema = new mongoose.Schema(
   {
     shortKey: {
-      type: String, 
+      type: String,
       unique: false
     },
     clicks: {
@@ -28,7 +27,8 @@ let counterSchema = new mongoose.Schema(
     visits: [visitSchema]
   },
   {
-    timestamps: true
+    timestamps: true,
+    versionKey: false,
   }
 )
 

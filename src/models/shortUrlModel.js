@@ -15,10 +15,6 @@ const urlSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-    name: {
-      type: String,
-      required: true
-    },
     title: {
       type: String,
       default: ''
@@ -37,7 +33,8 @@ const urlSchema = new mongoose.Schema(
     }
   },
   {
-    timestamps: true
+    timestamps: true,
+    versionKey: false,
   }
 )
 
