@@ -5,14 +5,15 @@ const axios = require('axios')
 
 class UrlVisitsService {
   async getClientIp(req) {
-    const ip = req.ip ||
+    const ip =
+      req.ip ||
       req.headers['x-forwarded-for']?.split(',')[0] ||
       req.connection.remoteAddress ||
       req.socket.remoteAddress ||
       null
-    
+
     if (!ip) return { ip: null }
-    
+
     try {
       const cleanIp = ip.replace('::ffff:', '') // Handle IPv4 mapped to IPv6
       const response = await axios.get(`http://ip-api.com/json/${cleanIp}`)
