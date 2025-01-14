@@ -38,14 +38,13 @@ const long2Short = async (req, res) => {
       return res.status(422).json({ error: 'missing required parameter' })
     }
 
-    let val = req.body.url
-    const BASE_URL = process.env.BASE_URL || 'http://localhost:5000'
+    let url = req.body.url
 
-    const metadata = await fetchMetadata(val, res.locals.urlResponse)
-    const isExist = await urlModel.findOne({ longUrl: val })
+    const metadata = await fetchMetadata(url, res.locals.urlResponse)
+    const isExist = await urlModel.findOne({ longUrl: url })
     if (isExist) {
       let result = await urlModel.findOneAndUpdate(
-        { longUrl: val },
+        { longUrl: url },
         {
           expiration: req.body.expiration ? req.body.expiration : 0,
           title: metadata.title,
@@ -55,18 +54,17 @@ const long2Short = async (req, res) => {
       )
 
       return res.status(200).json({
-        url: `${BASE_URL}/${result.shortKey}`,
+        key: result.shortKey,
         metadata: metadata,
         message: 'successfully updated'
       })
     }
 
-    const key = await generateUniqueKey(val)
+    const key = await generateUniqueKey(url)
 
     await urlModel.create({
       shortKey: key,
-      shortUrl: `${BASE_URL}/${key}`,
-      longUrl: val,
+      longUrl: url,
       title: metadata.title,
       description: metadata.description,
       hostname: metadata.hostname,
@@ -74,7 +72,7 @@ const long2Short = async (req, res) => {
     })
 
     const response = {
-      url: `${BASE_URL}/${key}`,
+      key: key,
       metadata: metadata
     }
 
@@ -139,24 +137,21 @@ const displayAllRecords = async (req, res) => {
 // PUT /{:url}
 const extendExpiration = async (req, res) => {
   try {
-    if (!req.body || !req.body.expiration) {
+    if (!req.body || !req.body.key || !req.body.expiration) {
       return res.status(422).json({ error: 'missing required parameter' })
     }
 
-    let key = req.params.url
-    const BASE_URL = process.env.BASE_URL || 'http://localhost:5000'
-
-    let result = await urlModel.findOneAndUpdate(
-      { shortKey: key },
-      { expiration: req.body.expiration ? req.body.expiration : 0 }
+    const result = await urlModel.findOneAndUpdate(
+      { shortKey: req.body.key },
+      { expiration: req.body.expiration }
     )
 
     if (!result) {
-      return res.status(404).json({ error: `${key} not found` })
+      return res.status(404).json({ error: 'URL not found' })
     }
 
     return res.status(200).json({
-      url: `${BASE_URL}/${result.shortKey}`,
+      key: result.shortKey,
       message: 'successfully updated'
     })
   } catch (err) {
@@ -164,12 +159,12 @@ const extendExpiration = async (req, res) => {
   }
 }
 
-const generateUniqueKey = async (val) => {
+const generateUniqueKey = async (url) => {
   let key
   let i = 0
   let stopped = false
   while (!stopped) {
-    key = to62HEX(toHashCode(val, i++))
+    key = to62HEX(toHashCode(url, i++))
     let shortExist = await urlModel.exists({ shortKey: key })
     if (!shortExist) {
       stopped = true

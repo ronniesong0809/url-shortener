@@ -28,7 +28,6 @@ jobs:
       - name: Scraping
         env:
           HOST: ${{ secrets.HOST }}
-          BASE_URL: ${{ secrets.BASE_URL }}
           MONGODB_URL: ${{ secrets.MONGODB_URL }}
           MONGODB_DATABASE: ${{ secrets.MONGODB_DATABASE }}
         run: | 
