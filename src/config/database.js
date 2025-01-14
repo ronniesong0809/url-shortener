@@ -10,10 +10,7 @@ class DataBase {
 
   _connect() {
     mongoose
-      .connect(`${server}/${database}?retryWrites=true&w=majority`, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-      })
+      .connect(`${server}/${database}?retryWrites=true&w=majority`)
       .then(() => {
         console.log(`Database ${database} connection successful!`)
       })
