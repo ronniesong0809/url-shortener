@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
-
-const urlStatsController = require('../controllers/urlStatsController')
+const urlStatsController = require('../services/urlStatsService')
 const { validateShortUrl } = require('../middleware/urlValidator')
 
 router.get('/all/stats', urlStatsController.getAllUrlsStats)

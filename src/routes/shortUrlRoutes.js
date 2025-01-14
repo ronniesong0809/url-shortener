@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const shortUrlController = require('../controllers/shortUrlController')
-
+const shortUrlController = require('../services/shortUrlService')
 const { validateUrl, validateShortUrl } = require('../middleware/urlValidator')
 
 router.get('/all', shortUrlController.displayAllRecords)

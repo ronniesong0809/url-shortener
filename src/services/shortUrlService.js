@@ -1,7 +1,7 @@
 const { toHashCode, to62HEX } = require('../lib/hashUtils.js')
 const urlModel = require('../models/shortUrlModel.js')
-const statsModel = require('../models/urlStatsModel.js')
 const { fetchMetadata } = require('../lib/metadataUtils.js')
+const urlVisitsService = require('./urlVisitsService.js')
 const dayjs = require('dayjs')
 dayjs().format()
 
@@ -23,23 +23,8 @@ const short2Long = async (req, res) => {
       return res.redirect(302, `${process.env.FRONTEND_BASE_URL}/${key}/error`)
     }
 
-    let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || null
-    let userAgent = req.headers['user-agent'] || null
-
-    await statsModel.findOneAndUpdate(
-      { shortKey: key },
-      { 
-        $inc: { clicks: 1 },
-        $push: { 
-          visits: { 
-            ip: ip, 
-            userAgent: userAgent,
-            timestamp: new Date()
-          }
-        }
-      },
-      { new: true, upsert: true }
-    )
+    await urlVisitsService.recordVisit(req, key)
+    
     return res.redirect(302, `${url.longUrl}`)
   } catch (err) {
     return res.status(500).json({ error: err.message })
