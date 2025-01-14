@@ -20,4 +20,4 @@ module.exports = {
   getExpirationDate,
   isExpired,
   toISOString
-} 
+}

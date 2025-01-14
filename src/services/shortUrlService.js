@@ -130,11 +130,15 @@ const displayAllRecords = async (req, res) => {
 const extendExpiration = async (req, res) => {
   try {
     if (!req.body || !req.body.key || typeof req.body.expiration !== 'number') {
-      return res.status(422).json({ error: 'Missing required fields: key and expiration (must be a number)' })
+      return res
+        .status(422)
+        .json({ error: 'Missing required fields: key and expiration (must be a number)' })
     }
 
     if (req.body.expiration < 0) {
-      return res.status(400).json({ error: 'Expiration must be 0 (never expires) or a positive number of days' })
+      return res
+        .status(400)
+        .json({ error: 'Expiration must be 0 (never expires) or a positive number of days' })
     }
 
     const existingUrl = await urlModel.findOne({ shortKey: req.body.key })
