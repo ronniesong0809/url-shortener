@@ -28,7 +28,16 @@ const short2Long = async (req, res) => {
 
     await statsModel.findOneAndUpdate(
       { shortKey: key },
-      { $inc: { clicks: 1 }, ip: ip, userAgent: userAgent },
+      { 
+        $inc: { clicks: 1 },
+        $push: { 
+          visits: { 
+            ip: ip, 
+            userAgent: userAgent,
+            timestamp: new Date()
+          }
+        }
+      },
       { new: true, upsert: true }
     )
     return res.redirect(302, `${url.longUrl}`)
