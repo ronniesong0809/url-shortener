@@ -109,7 +109,7 @@ const displayAllRecords = async (req, res) => {
     }
 
     return res.status(200).json({
-      urls: urls,
+      content: urls,
       currentPage: page,
       totalPages: Math.ceil(total / limit),
       totalItems: total,
@@ -191,7 +191,7 @@ const getAllMetadata = async (req, res) => {
     }
 
     return res.status(200).json({
-      metadata: urls,
+      content: urls,
       currentPage: page,
       totalPages: Math.ceil(total / limit),
       totalItems: total,

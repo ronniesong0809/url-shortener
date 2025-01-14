@@ -38,7 +38,7 @@ const getAllUrlsStats = async (req, res) => {
     }
 
     return res.status(200).json({
-      stats: stats,
+      content: stats,
       currentPage: page,
       totalPages: Math.ceil(total / limit),
       totalItems: total,
