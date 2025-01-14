@@ -7,7 +7,7 @@ router.get('/all', shortUrlController.displayAllRecords)
 router.get('/all/metadata', shortUrlController.getAllMetadata)
 router.get('/:url', validateShortUrl, shortUrlController.short2Long)
 router.post('/shorten', validateUrl, shortUrlController.long2Short)
-router.put('/:url', validateShortUrl, shortUrlController.extendExpiration)
+router.put('/extend', shortUrlController.extendExpiration)
 router.delete('/:url', validateShortUrl, shortUrlController.deleteRecord)
 
 module.exports = router
