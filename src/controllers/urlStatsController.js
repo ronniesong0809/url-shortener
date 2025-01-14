@@ -1,10 +1,10 @@
-const counterSchema = require('../models/urlStatsModel.js')
+const statsModel = require('../models/urlStatsModel.js')
 
 // GET /{:url}/stats
 const getUrlStats = async (req, res) => {
   try {
     let key = req.params.url
-    let stats = await counterSchema.findOne({ shortKey: key })
+    let stats = await statsModel.findOne({ shortKey: key })
 
     if (!stats) {
       return res.status(404).json({ error: `unable to find /${key} stats` })
@@ -19,18 +19,30 @@ const getUrlStats = async (req, res) => {
 // GET /all/stats
 const getAllUrlsStats = async (req, res) => {
   try {
-    let stats = await counterSchema.find({})
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 10
+    const skip = (page - 1) * limit
+
+    const [stats, total] = await Promise.all([
+      statsModel.find({}, null, {
+        sort: { createdAt: -1 },
+        skip: skip,
+        limit: limit
+      }),
+      statsModel.countDocuments({})
+    ])
 
     if (!stats) {
       return res.status(404).json({ error: `unable to find /all stats` })
     }
 
-    let arr = []
-    stats.forEach(function (element) {
-      arr.push(element)
+    return res.status(200).json({
+      stats: stats,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+      totalItems: total,
+      itemsPerPage: limit
     })
-
-    return res.status(200).json(arr)
   } catch (err) {
     return res.status(500).json({ error: err.message })
   }

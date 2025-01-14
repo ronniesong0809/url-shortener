@@ -1,6 +1,6 @@
 const { toHashCode, to62HEX } = require('../lib/hashUtils.js')
 const urlModel = require('../models/shortUrlModel.js')
-const counterSchema = require('../models/urlStatsModel.js')
+const statsModel = require('../models/urlStatsModel.js')
 const dayjs = require('dayjs')
 dayjs().format()
 
@@ -25,7 +25,7 @@ const short2Long = async (req, res) => {
     let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || null
     let userAgent = req.headers['user-agent'] || null
 
-    await counterSchema.findOneAndUpdate(
+    await statsModel.findOneAndUpdate(
       { shortKey: key },
       { $inc: { clicks: 1 }, ip: ip, userAgent: userAgent },
       { new: true, upsert: true }
@@ -101,18 +101,30 @@ const deleteRecord = async (req, res) => {
 // GET /all
 const displayAllRecords = async (req, res) => {
   try {
-    let urls = await urlModel.find({}, null, { sort: { createdAt: -1 } })
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 10
+    const skip = (page - 1) * limit
+
+    const [urls, total] = await Promise.all([
+      urlModel.find({}, null, { 
+        sort: { createdAt: -1 },
+        skip: skip,
+        limit: limit
+      }),
+      urlModel.countDocuments({})
+    ])
 
     if (!urls) {
       return res.status(404).json({ error: `unable to find /all urls` })
     }
 
-    let arr = []
-    urls.forEach(function (element) {
-      arr.push(element)
+    return res.status(200).json({
+      urls: urls,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+      totalItems: total,
+      itemsPerPage: limit
     })
-
-    return res.status(200).json(arr)
   } catch (err) {
     return res.status(500).json({ error: err.message })
   }
