@@ -10,7 +10,7 @@ const getUrlStats = async (req, res) => {
     }
 
     return res.status(200).json({
-      stats: stats,
+      content: stats,
       message: 'URL stats retrieved successfully'
     })
   } catch (err) {
