@@ -7,11 +7,11 @@ class UrlVisitsService {
 
     return await statsModel.findOneAndUpdate(
       { shortKey },
-      { 
+      {
         $inc: { clicks: 1 },
-        $push: { 
-          visits: { 
-            ip, 
+        $push: {
+          visits: {
+            ip,
             userAgent,
             timestamp: new Date()
           }
@@ -22,4 +22,4 @@ class UrlVisitsService {
   }
 }
 
-module.exports = new UrlVisitsService() 
+module.exports = new UrlVisitsService()

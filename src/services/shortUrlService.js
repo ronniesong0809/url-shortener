@@ -36,7 +36,7 @@ const long2Short = async (req, res) => {
     let url = req.body.url
     const metadata = await fetchMetadata(url, res.locals.urlResponse)
     const isExist = await urlModel.findOne({ longUrl: url })
-    
+
     if (isExist) {
       let result = await urlModel.findOneAndUpdate(
         { longUrl: url },
@@ -46,7 +46,7 @@ const long2Short = async (req, res) => {
             metadata: {
               title: metadata.title,
               description: metadata.description,
-              hostname: metadata.hostname,
+              hostname: metadata.hostname
             }
           }
         },
@@ -67,7 +67,7 @@ const long2Short = async (req, res) => {
       metadata: {
         title: metadata.title,
         description: metadata.description,
-        hostname: metadata.hostname,
+        hostname: metadata.hostname
       },
       expiration: req.body.expiration ? req.body.expiration : 0
     })
@@ -161,11 +161,15 @@ const getAllMetadata = async (req, res) => {
     const skip = (page - 1) * limit
 
     const [urls, total] = await Promise.all([
-      urlModel.find({}, { shortKey: 1, metadata: 1, _id: 0 }, {
-        sort: { createdAt: -1 },
-        skip: skip,
-        limit: limit
-      }),
+      urlModel.find(
+        {},
+        { shortKey: 1, metadata: 1, _id: 0 },
+        {
+          sort: { createdAt: -1 },
+          skip: skip,
+          limit: limit
+        }
+      ),
       urlModel.countDocuments({})
     ])
 

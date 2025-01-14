@@ -1,18 +1,21 @@
 const mongoose = require('mongoose')
 
-const visitSchema = new mongoose.Schema({
-  ip: {
-    type: String,
-    required: true
+const visitSchema = new mongoose.Schema(
+  {
+    ip: {
+      type: String,
+      required: true
+    },
+    userAgent: {
+      type: String,
+      required: true
+    }
   },
-  userAgent: {
-    type: String,
-    required: true
+  {
+    timestamps: true,
+    versionKey: false
   }
-}, {
-  timestamps: true,
-  versionKey: false,
-})
+)
 
 let counterSchema = new mongoose.Schema(
   {
@@ -28,7 +31,7 @@ let counterSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-    versionKey: false,
+    versionKey: false
   }
 )
 

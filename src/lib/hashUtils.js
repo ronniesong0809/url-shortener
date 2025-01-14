@@ -6,7 +6,7 @@ const toHashCode = (url, num) => {
     let ch = url.charCodeAt(i)
     hash += (hash << 5) + ch
   }
-  return hash & 0x7FFFFFFF
+  return hash & 0x7fffffff
 }
 
 const to62HEX = (hash) => {

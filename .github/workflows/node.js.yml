@@ -30,6 +30,6 @@ jobs:
           HOST: ${{ secrets.HOST }}
           MONGODB_URL: ${{ secrets.MONGODB_URL }}
           MONGODB_DATABASE: ${{ secrets.MONGODB_DATABASE }}
-        run: | 
+        run: |
           npm test
           npm run coverage

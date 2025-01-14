@@ -10,12 +10,14 @@ const fetchMetadata = async (url, existingResponse = null) => {
     } else {
       response = await axios.get(url)
     }
-    
+
     const $ = cheerio.load(response.data)
-    
+
     const title = $('title').text() || $('meta[property="og:title"]').attr('content') || ''
-    const description = $('meta[name="description"]').attr('content') || 
-                       $('meta[property="og:description"]').attr('content') || ''
+    const description =
+      $('meta[name="description"]').attr('content') ||
+      $('meta[property="og:description"]').attr('content') ||
+      ''
 
     return {
       title,
@@ -24,7 +26,7 @@ const fetchMetadata = async (url, existingResponse = null) => {
     }
   } catch (error) {
     console.error('Error fetching metadata:', error.message)
-    
+
     return {
       title: '',
       description: '',

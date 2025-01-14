@@ -2,7 +2,7 @@ const axios = require('axios')
 
 const validateUrl = async (req, res, next) => {
   const { url } = req.body
-  
+
   if (!url) {
     return res.status(400).json({ error: 'Missing required field: url' })
   }
@@ -10,10 +10,10 @@ const validateUrl = async (req, res, next) => {
   if (url.length > 2048) {
     return res.status(400).json({ error: 'URL exceeds maximum length of 2048 characters' })
   }
-  
+
   try {
     const parsedUrl = new URL(url)
-    
+
     if (!['http:', 'https:'].includes(parsedUrl.protocol)) {
       return res.status(400).json({ error: 'Invalid protocol: URL must use HTTP or HTTPS' })
     }
@@ -28,7 +28,7 @@ const validateUrl = async (req, res, next) => {
       /(<|>|'|"|`|\{|\}|\[|\])/
     ]
 
-    if (suspiciousPatterns.some(pattern => pattern.test(url))) {
+    if (suspiciousPatterns.some((pattern) => pattern.test(url))) {
       return res.status(400).json({ error: 'Invalid URL: Contains suspicious patterns' })
     }
 
@@ -38,13 +38,13 @@ const validateUrl = async (req, res, next) => {
         maxRedirects: 5,
         validateStatus: (status) => status < 500
       })
-      
+
       res.locals.urlResponse = response
-      
+
       if (response.status >= 400) {
         res.locals.urlWarning = `Warning: Target URL returned status ${response.status}`
       }
-      
+
       next()
     } catch (error) {
       if (error.response && error.response.status >= 500) {
@@ -71,4 +71,4 @@ const validateShortUrl = (req, res, next) => {
 module.exports = {
   validateUrl,
   validateShortUrl
-} 
+}

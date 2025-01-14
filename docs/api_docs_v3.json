@@ -94,14 +94,7 @@
                         "type": "string"
                       }
                     },
-                    "required": [
-                      "_id",
-                      "shortKey",
-                      "clicks",
-                      "createdAt",
-                      "ip",
-                      "updatedAt"
-                    ]
+                    "required": ["_id", "shortKey", "clicks", "createdAt", "ip", "updatedAt"]
                   }
                 }
               }
@@ -248,9 +241,7 @@
             }
           }
         },
-        "tags": [
-          "URL"
-        ]
+        "tags": ["URL"]
       },
       "delete": {
         "summary": "/{url}",
@@ -299,9 +290,7 @@
             }
           }
         },
-        "tags": [
-          "URL"
-        ]
+        "tags": ["URL"]
       }
     },
     "/{url}/stats": {
@@ -319,9 +308,7 @@
           }
         ],
         "responses": {},
-        "tags": [
-          "URL"
-        ]
+        "tags": ["URL"]
       }
     },
     "/shorten": {

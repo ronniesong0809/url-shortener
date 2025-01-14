@@ -57,14 +57,14 @@ To check the React frontend repository, go to [github.com/ronniesong0809/url-sho
 
 ---
 
-| Method | Endpoint | Params |
-| --- | --- | --- |
-| POST | `shorturl.ronsong.live/shorten` | Body: `url(required)`, `expiration(optional)` |
-| GET | `shorturl.ronsong.live/{key}` | Path: `key(required)` |
-| GET | `shorturl.ronsong.live/{key}/stats` | Path: `key(required)` |
-| DELETE | `shorturl.ronsong.live/{key}` | Path: `key(required)` |
-| GET | `shorturl.ronsong.live/all` | `none` |
-| GET | `shorturl.ronsong.live/all/stats` | `none` |
+| Method | Endpoint                            | Params                                        |
+| ------ | ----------------------------------- | --------------------------------------------- |
+| POST   | `shorturl.ronsong.live/shorten`     | Body: `url(required)`, `expiration(optional)` |
+| GET    | `shorturl.ronsong.live/{key}`       | Path: `key(required)`                         |
+| GET    | `shorturl.ronsong.live/{key}/stats` | Path: `key(required)`                         |
+| DELETE | `shorturl.ronsong.live/{key}`       | Path: `key(required)`                         |
+| GET    | `shorturl.ronsong.live/all`         | `none`                                        |
+| GET    | `shorturl.ronsong.live/all/stats`   | `none`                                        |
 
 ---
 
