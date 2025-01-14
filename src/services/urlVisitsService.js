@@ -1,4 +1,5 @@
 const statsModel = require('../models/urlStatsModel.js')
+const { toISOString } = require('../lib/timeUtils.js')
 
 class UrlVisitsService {
   async recordVisit(req, shortKey) {
@@ -13,7 +14,7 @@ class UrlVisitsService {
           visits: {
             ip,
             userAgent,
-            timestamp: new Date()
+            timestamp: toISOString()
           }
         }
       },

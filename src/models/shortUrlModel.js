@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const { toISOString } = require('../lib/timeUtils.js')
 
 const urlSchema = new mongoose.Schema(
   {
@@ -31,7 +32,9 @@ const urlSchema = new mongoose.Schema(
     }
   },
   {
-    timestamps: true,
+    timestamps: {
+      currentTime: toISOString
+    },
     versionKey: false
   }
 )

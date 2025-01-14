@@ -2,8 +2,7 @@ const { toHashCode, to62HEX } = require('../lib/hashUtils.js')
 const urlModel = require('../models/shortUrlModel.js')
 const { fetchMetadata } = require('../lib/metadataUtils.js')
 const urlVisitsService = require('./urlVisitsService.js')
-const dayjs = require('dayjs')
-dayjs().format()
+const { isExpired } = require('../lib/timeUtils.js')
 
 const short2Long = async (req, res) => {
   try {
@@ -14,10 +13,10 @@ const short2Long = async (req, res) => {
       return res.status(404).json({ error: 'URL not found' })
     }
 
-    let expire = dayjs(url.updatedAt).add(url.expiration, 'day')
-    let today = dayjs(new Date())
-    if (url.expiration !== 0 && expire.isBefore(today)) {
-      return res.redirect(302, `${process.env.FRONTEND_BASE_URL}/${key}/error`)
+    if (url.expiration > 0) {
+      if (isExpired(url.updatedAt, url.expiration)) {
+        return res.redirect(302, `${process.env.FRONTEND_BASE_URL}/${key}/error`)
+      }
     }
 
     await urlVisitsService.recordVisit(req, key)
@@ -130,8 +129,12 @@ const displayAllRecords = async (req, res) => {
 
 const extendExpiration = async (req, res) => {
   try {
-    if (!req.body || !req.body.key || !req.body.expiration) {
-      return res.status(422).json({ error: 'Missing required fields: key and expiration' })
+    if (!req.body || !req.body.key || typeof req.body.expiration !== 'number') {
+      return res.status(422).json({ error: 'Missing required fields: key and expiration (must be a number)' })
+    }
+
+    if (req.body.expiration < 0) {
+      return res.status(400).json({ error: 'Expiration must be 0 (never expires) or a positive number of days' })
     }
 
     const existingUrl = await urlModel.findOne({ shortKey: req.body.key })

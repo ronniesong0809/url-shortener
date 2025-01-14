@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const { toISOString } = require('../lib/timeUtils.js')
 
 const visitSchema = new mongoose.Schema(
   {
@@ -12,7 +13,9 @@ const visitSchema = new mongoose.Schema(
     }
   },
   {
-    timestamps: true,
+    timestamps: {
+      currentTime: toISOString
+    },
     versionKey: false
   }
 )
@@ -30,7 +33,9 @@ let counterSchema = new mongoose.Schema(
     visits: [visitSchema]
   },
   {
-    timestamps: true,
+    timestamps: {
+      currentTime: toISOString
+    },
     versionKey: false
   }
 )
