@@ -1,14 +1,44 @@
 const statsModel = require('../models/urlStatsModel.js')
 const { toISOString } = require('../lib/timeUtils.js')
 const UAParser = require('ua-parser-js')
+const axios = require('axios')
 
 class UrlVisitsService {
-  getClientIp(req) {
-    return req.ip ||
-      req.headers['x-forwarded-for'] ||
+  async getClientIp(req) {
+    const ip = req.ip ||
+      req.headers['x-forwarded-for']?.split(',')[0] ||
       req.connection.remoteAddress ||
       req.socket.remoteAddress ||
       null
+    
+    if (!ip) return { ip: null }
+    
+    try {
+      const cleanIp = ip.replace('::ffff:', '') // Handle IPv4 mapped to IPv6
+      const response = await axios.get(`http://ip-api.com/json/${cleanIp}`)
+      return {
+        ip,
+        ipInfo: {
+          query: response.data.query,
+          status: response.data.status,
+          country: response.data.country,
+          countryCode: response.data.countryCode,
+          region: response.data.region,
+          regionName: response.data.regionName,
+          city: response.data.city,
+          zip: response.data.zip,
+          lat: response.data.lat,
+          lon: response.data.lon,
+          timezone: response.data.timezone,
+          isp: response.data.isp,
+          org: response.data.org,
+          as: response.data.as
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching IP details:', error.message)
+      return { ip }
+    }
   }
 
   parseUserAgent(userAgent) {
@@ -36,9 +66,9 @@ class UrlVisitsService {
     }
   }
 
-  extractRequestData(req) {
+  async extractRequestData(req) {
     return {
-      ip: this.getClientIp(req),
+      ...(await this.getClientIp(req)),
       userAgent: req.headers['user-agent'] || null,
       acceptLanguage: req.headers['accept-language'] || null,
       cookies: req.headers['cookie'] || null,
@@ -47,7 +77,7 @@ class UrlVisitsService {
   }
 
   async recordVisit(req, shortKey) {
-    const requestData = this.extractRequestData(req)
+    const requestData = await this.extractRequestData(req)
     const metadata = requestData.userAgent ? this.parseUserAgent(requestData.userAgent) : {}
 
     return await statsModel.findOneAndUpdate(

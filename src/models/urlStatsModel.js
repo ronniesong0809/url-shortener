@@ -31,12 +31,30 @@ const metadataSchema = new mongoose.Schema({
   cpu: String
 }, { _id: false })
 
+const ipInfoSchema = new mongoose.Schema({
+  query: String,
+  status: String,
+  country: String,
+  countryCode: String,
+  region: String,
+  regionName: String,
+  city: String,
+  zip: String,
+  lat: Number,
+  lon: Number,
+  timezone: String,
+  isp: String,
+  org: String,
+  as: String
+}, { _id: false })
+
 const visitSchema = new mongoose.Schema(
   {
     ip: {
       type: String,
       required: true
     },
+    ipInfo: ipInfoSchema,
     userAgent: {
       type: String,
       required: true
