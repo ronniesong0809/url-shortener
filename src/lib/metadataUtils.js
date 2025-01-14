@@ -1,6 +1,11 @@
 const cheerio = require('cheerio')
 const axios = require('axios')
 
+const cleanText = (text) => {
+  if (!text) return ''
+  return text.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim()
+}
+
 const fetchMetadata = async (url, existingResponse = null) => {
   const hostname = new URL(url).hostname.replace('www.', '')
   try {
@@ -13,11 +18,14 @@ const fetchMetadata = async (url, existingResponse = null) => {
 
     const $ = cheerio.load(response.data)
 
-    const title = $('title').text() || $('meta[property="og:title"]').attr('content') || ''
-    const description =
+    const title = cleanText(
+      $('title').text() || $('meta[property="og:title"]').attr('content') || ''
+    )
+    const description = cleanText(
       $('meta[name="description"]').attr('content') ||
-      $('meta[property="og:description"]').attr('content') ||
-      ''
+        $('meta[property="og:description"]').attr('content') ||
+        ''
+    )
 
     return {
       title,
