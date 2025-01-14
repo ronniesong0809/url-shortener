@@ -6,17 +6,24 @@ const axios = require('axios')
 class UrlVisitsService {
   async getClientIp(req) {
     const ip =
+      req.headers['x-forwarded-for'] ||
       req.ip ||
-      req.headers['x-forwarded-for']?.split(',')[0] ||
-      req.connection.remoteAddress ||
       req.socket.remoteAddress ||
+      req.connection.remoteAddress ||
       null
 
-    if (!ip) return { ip: null }
+    if (!ip) return { ip: null, ipInfo: { status: 'ip is null' } }
 
     try {
-      const cleanIp = ip.replace('::ffff:', '') // Handle IPv4 mapped to IPv6
-      const response = await axios.get(`http://ip-api.com/json/${cleanIp}`)
+      const cleanIp = ip.includes(',') ? ip.split(',')[0].trim() : ip.trim()
+      const finalIp = cleanIp.replace(/^::ffff:/, '')
+      const ipv4Regex = /^(\d{1,3}\.){3}\d{1,3}$/
+      const ipv6Regex = /^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$/
+      if (!ipv4Regex.test(finalIp) && !ipv6Regex.test(finalIp)) {
+        return { ip: null, ipInfo: { status: 'ip is not valid' } }
+      }
+
+      const response = await axios.get(`http://ip-api.com/json/${finalIp}`)
       return {
         ip,
         ipInfo: {
@@ -38,7 +45,7 @@ class UrlVisitsService {
       }
     } catch (error) {
       console.error('Error fetching IP details:', error.message)
-      return { ip }
+      return { ip, ipInfo: { status: 'fetching IP details failed' } }
     }
   }
 
