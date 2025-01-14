@@ -134,20 +134,32 @@ const extendExpiration = async (req, res) => {
       return res.status(422).json({ error: 'Missing required fields: key and expiration' })
     }
 
-    const result = await urlModel.findOneAndUpdate(
-      { shortKey: req.body.key },
-      { expiration: req.body.expiration },
-      { new: true }
-    )
-
-    if (!result) {
+    const existingUrl = await urlModel.findOne({ shortKey: req.body.key })
+    if (!existingUrl) {
       return res.status(404).json({ error: 'URL not found' })
     }
+
+    const metadata = await fetchMetadata(existingUrl.longUrl)
+    const result = await urlModel.findOneAndUpdate(
+      { shortKey: req.body.key },
+      {
+        $set: {
+          expiration: req.body.expiration,
+          metadata: {
+            title: metadata.title,
+            description: metadata.description,
+            hostname: metadata.hostname
+          }
+        }
+      },
+      { new: true, runValidators: true }
+    )
 
     return res.status(200).json({
       shortKey: result.shortKey,
       expiration: result.expiration,
-      message: 'Expiration updated successfully'
+      metadata: result.metadata,
+      message: 'URL expiration and metadata updated successfully'
     })
   } catch (err) {
     return res.status(500).json({ error: 'Internal server error' })
