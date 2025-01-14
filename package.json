@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "test": "jest --verbose --coverage --forceExit --runInBand",
-    "coverage": "npm run test && cat ./coverage/lcov.info | coveralls"
+    "lint": "eslint .",
+    "format": "prettier --write ."
   },
   "repository": {
     "type": "git",
@@ -26,10 +26,13 @@
     "dayjs": "^1.11.13",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "mongoose": "^8.9.4",
-    "supertest": "^7.0.0"
+    "mongoose": "^8.9.4"
   },
   "devDependencies": {
-    "nodemon": "^3.1.9"
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-jest": "^27.9.0",
+    "nodemon": "^3.1.9",
+    "prettier": "^3.2.5"
   }
 }
