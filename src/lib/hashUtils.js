@@ -1,4 +1,5 @@
 const str = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
 const toHashCode = (url, num) => {
   let hash = num
   for (let i = 0; i < url.length; i++) {

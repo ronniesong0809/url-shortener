@@ -3,20 +3,26 @@ const errorHandler = (err, req, res, next) => {
 
   if (err.name === 'ValidationError') {
     return res.status(400).json({
-      error: 'Validation Error',
-      details: err.message
+      error: 'Validation failed',
+      details: Object.values(err.errors).map(e => e.message)
     })
   }
 
-  if (err.name === 'MongoError' && err.code === 11000) {
-    return res.status(409).json({
-      error: 'Duplicate Error',
-      details: 'Resource already exists'
+  if (err.name === 'MongoError' || err.name === 'MongoServerError') {
+    if (err.code === 11000) {
+      return res.status(409).json({
+        error: 'Resource already exists',
+        details: 'A resource with these unique fields already exists'
+      })
+    }
+    return res.status(500).json({
+      error: 'Database error',
+      details: process.env.NODE_ENV === 'development' ? err.message : undefined
     })
   }
 
   res.status(500).json({
-    error: 'Internal Server Error',
+    error: 'Internal server error',
     details: process.env.NODE_ENV === 'development' ? err.message : undefined
   })
 }

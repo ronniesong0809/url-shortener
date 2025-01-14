@@ -1,22 +1,23 @@
 const statsModel = require('../models/urlStatsModel.js')
 
-// GET /{:url}/stats
 const getUrlStats = async (req, res) => {
   try {
     let key = req.params.url
     let stats = await statsModel.findOne({ shortKey: key })
 
     if (!stats) {
-      return res.status(404).json({ error: `unable to find /${key} stats` })
+      return res.status(404).json({ error: 'URL stats not found' })
     }
 
-    return res.status(200).json({ stats })
+    return res.status(200).json({
+      stats: stats,
+      message: 'URL stats retrieved successfully'
+    })
   } catch (err) {
-    return res.status(500).json({ error: err.message })
+    return res.status(500).json({ error: 'Internal server error' })
   }
 }
 
-// GET /all/stats
 const getAllUrlsStats = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1
@@ -32,8 +33,8 @@ const getAllUrlsStats = async (req, res) => {
       statsModel.countDocuments({})
     ])
 
-    if (!stats) {
-      return res.status(404).json({ error: `unable to find /all stats` })
+    if (!stats || stats.length === 0) {
+      return res.status(404).json({ error: 'No URL stats found' })
     }
 
     return res.status(200).json({
@@ -41,10 +42,11 @@ const getAllUrlsStats = async (req, res) => {
       currentPage: page,
       totalPages: Math.ceil(total / limit),
       totalItems: total,
-      itemsPerPage: limit
+      itemsPerPage: limit,
+      message: 'URL stats retrieved successfully'
     })
   } catch (err) {
-    return res.status(500).json({ error: err.message })
+    return res.status(500).json({ error: 'Internal server error' })
   }
 }
 
