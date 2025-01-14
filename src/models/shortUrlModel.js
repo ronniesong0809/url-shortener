@@ -7,25 +7,23 @@ const urlSchema = new mongoose.Schema(
       required: true,
       unique: true
     },
-    shortUrl: {
-      type: String,
-      required: true
-    },
     longUrl: {
       type: String,
       required: true
     },
-    title: {
-      type: String,
-      default: ''
-    },
-    description: {
-      type: String,
-      default: ''
-    },
-    hostname: {
-      type: String,
-      required: true
+    metadata: {
+      title: {
+        type: String,
+        default: ''
+      },
+      description: {
+        type: String,
+        default: ''
+      },
+      hostname: {
+        type: String,
+        required: true
+      }
     },
     expiration: {
       type: Number,

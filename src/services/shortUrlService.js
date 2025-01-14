@@ -24,7 +24,7 @@ const short2Long = async (req, res) => {
     }
 
     await urlVisitsService.recordVisit(req, key)
-    
+
     return res.redirect(302, `${url.longUrl}`)
   } catch (err) {
     return res.status(500).json({ error: err.message })
@@ -46,42 +46,42 @@ const long2Short = async (req, res) => {
       let result = await urlModel.findOneAndUpdate(
         { longUrl: url },
         {
-          expiration: req.body.expiration ? req.body.expiration : 0,
-          title: metadata.title,
-          description: metadata.description,
-          hostname: metadata.hostname,
-        }
+          $set: {
+            expiration: req.body.expiration ? req.body.expiration : 0,
+            metadata: {
+              title: metadata.title,
+              description: metadata.description,
+              hostname: metadata.hostname,
+            }
+          }
+        },
+        { new: true, runValidators: true }
       )
 
       return res.status(200).json({
         key: result.shortKey,
-        metadata: metadata,
+        metadata: result.metadata,
         message: 'successfully updated'
       })
     }
 
     const key = await generateUniqueKey(url)
 
-    await urlModel.create({
+    const newUrl = await urlModel.create({
       shortKey: key,
       longUrl: url,
-      title: metadata.title,
-      description: metadata.description,
-      hostname: metadata.hostname,
+      metadata: {
+        title: metadata.title,
+        description: metadata.description,
+        hostname: metadata.hostname,
+      },
       expiration: req.body.expiration ? req.body.expiration : 0
     })
 
-    const response = {
+    return res.status(201).json({
       key: key,
-      metadata: metadata
-    }
-
-    // Add warning if present
-    if (res.locals.urlWarning) {
-      response.warning = res.locals.urlWarning
-    }
-
-    return res.status(201).json(response)
+      metadata: newUrl.metadata
+    })
   } catch (err) {
     return res.status(500).json({ error: err.message })
   }
