@@ -1,9 +1,11 @@
 const express = require('express')
 const router = express.Router()
-const urlStatsController = require('../services/urlStatsService')
-const { validateShortUrl } = require('../middleware/urlValidator')
 
-router.get('/all/stats', urlStatsController.getAllUrlsStats)
-router.get('/:url/stats', validateShortUrl, urlStatsController.getUrlStats)
+const { validateShortUrl } = require('../middleware/urlValidator')
+const urlStatsService = require('../services/urlStatsService')
+
+router.get('/all/stats', urlStatsService.getAllUrlsStats)
+router.get('/:url/stats', validateShortUrl, urlStatsService.getUrlStats)
+router.get('/:shortKey/daily', urlStatsService.getVisitCountsByDate)
 
 module.exports = router

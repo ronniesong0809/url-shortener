@@ -50,4 +50,43 @@ const getAllUrlsStats = async (req, res) => {
   }
 }
 
-module.exports = { getUrlStats, getAllUrlsStats }
+const getVisitCountsByDate = async (req, res) => {
+  try {
+    const shortKey = req.params.shortKey
+    const stats = await statsModel.aggregate(
+      [
+        { $match: { shortKey: shortKey } },
+        { $unwind: '$visits' },
+        {
+          $project: {
+            date: {
+              $dateToString: {
+                format: '%Y-%m-%d',
+                date: '$visits.createdAt'
+              }
+            },
+            visits: {
+              $sum: 1
+            }
+          }
+        },
+        {
+          $project: {
+            _id: false,
+            date: '$_id',
+            visits: '$visits'
+          }
+        }
+      ],
+      { maxTimeMS: 60000, allowDiskUse: true }
+    )
+    return res.status(200).json({
+      content: stats,
+      message: 'Visit counts by date retrieved successfully'
+    })
+  } catch (error) {
+    return res.status(500).json({ error: 'Internal server error' })
+  }
+}
+
+module.exports = { getUrlStats, getAllUrlsStats, getVisitCountsByDate }
