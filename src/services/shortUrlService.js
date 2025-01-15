@@ -16,7 +16,7 @@ const short2Long = async (req, res) => {
     await urlVisitsService.recordVisit(req, key)
     return res.redirect(302, `${url.longUrl}`)
   } catch (err) {
-    return res.status(500).json({ error: 'Internal server error' })
+    return res.redirect(302, `${process.env.FRONTEND_BASE_URL}/${key}/error`)
   }
 }
 
