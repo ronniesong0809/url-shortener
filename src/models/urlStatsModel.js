@@ -35,7 +35,7 @@ const deviceSchema = new mongoose.Schema(
   { _id: false }
 )
 
-const metadataSchema = new mongoose.Schema(
+const userAgentInfoSchema = new mongoose.Schema(
   {
     browser: browserSchema,
     engine: engineSchema,
@@ -86,7 +86,7 @@ const visitSchema = new mongoose.Schema(
     referer: {
       type: String
     },
-    metadata: metadataSchema,
+    userAgentInfo: userAgentInfoSchema,
     timestamp: {
       type: String,
       required: true

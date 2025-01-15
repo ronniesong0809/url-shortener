@@ -76,7 +76,6 @@ class UrlVisitsService {
 
   async extractRequestData(req) {
     return {
-      ...(await this.getClientIp(req)),
       userAgent: req.headers['user-agent'] || null,
       acceptLanguage: req.headers['accept-language'] || null,
       cookies: req.headers['cookie'] || null,
@@ -86,7 +85,7 @@ class UrlVisitsService {
 
   async recordVisit(req, shortKey) {
     const requestData = await this.extractRequestData(req)
-    const metadata = requestData.userAgent ? this.parseUserAgent(requestData.userAgent) : {}
+    const userAgentInfo = requestData.userAgent ? this.parseUserAgent(requestData.userAgent) : {}
 
     return await statsModel.findOneAndUpdate(
       { shortKey },
@@ -95,7 +94,8 @@ class UrlVisitsService {
         $push: {
           visits: {
             ...requestData,
-            metadata,
+            ...(await this.getClientIp(req)),
+            userAgentInfo,
             timestamp: toISOString()
           }
         }
