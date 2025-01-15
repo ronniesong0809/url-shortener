@@ -20,7 +20,7 @@ class UrlVisitsService {
       const ipv4Regex = /^(\d{1,3}\.){3}\d{1,3}$/
       const ipv6Regex = /^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$/
       if (!ipv4Regex.test(finalIp) && !ipv6Regex.test(finalIp)) {
-        return { ip: null, ipInfo: { status: 'ip is not valid' } }
+        return { ip: finalIp, ipInfo: { status: 'ip is not valid' } }
       }
 
       const response = await axios.get(`http://ip-api.com/json/${finalIp}`)
