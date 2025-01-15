@@ -58,8 +58,8 @@ const getVisitCountsByDate = async (req, res) => {
         { $match: { shortKey: shortKey } },
         { $unwind: '$visits' },
         {
-          $project: {
-            date: {
+          $group: {
+            _id: {
               $dateToString: {
                 format: '%Y-%m-%d',
                 date: '$visits.createdAt'
