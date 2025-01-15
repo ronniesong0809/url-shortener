@@ -10,7 +10,7 @@ const short2Long = async (req, res) => {
     let url = await urlModel.findOne({ shortKey: key })
 
     if (!url || (url.expiration > 0 && isExpired(url.updatedAt, url.expiration))) {
-      return res.redirect(302, `${process.env.FRONTEND_BASE_URL}/${key}/error`)
+      return res.redirect(302, `${process.env.FRONTEND_BASE_URL}/${key}/expired`)
     }
 
     await urlVisitsService.recordVisit(req, key)
