@@ -53,35 +53,49 @@ const getAllUrlsStats = async (req, res) => {
 const getVisitCountsByDate = async (req, res) => {
   try {
     const shortKey = req.params.shortKey
-    const stats = await statsModel.aggregate(
-      [
-        { $match: { shortKey: shortKey } },
-        { $unwind: '$visits' },
-        {
-          $group: {
-            _id: {
-              $dateToString: {
-                format: '%Y-%m-%d',
-                date: '$visits.createdAt'
-              }
-            },
-            visits: {
-              $sum: 1
+    
+    // Generate dates for the last 10 days
+    const dates = Array.from({ length: 10 }, (_, i) => {
+      const date = new Date()
+      date.setDate(date.getDate() - i)
+      return date.toISOString().split('T')[0]
+    }).reverse()
+
+    const stats = await statsModel.aggregate([
+      { $match: { shortKey: shortKey } },
+      { $unwind: { path: '$visits', preserveNullAndEmptyArrays: true } },
+      {
+        $group: {
+          _id: {
+            $dateToString: {
+              format: '%Y-%m-%d',
+              date: { $toDate: '$visits.timestamp' }
             }
-          }
-        },
-        {
-          $project: {
-            _id: false,
-            date: '$_id',
-            visits: '$visits'
-          }
+          },
+          visits: { $sum: 1 }
         }
-      ],
-      { maxTimeMS: 60000, allowDiskUse: true }
-    )
+      },
+      {
+        $project: {
+          _id: false,
+          date: '$_id',
+          visits: '$visits'
+        }
+      }
+    ])
+
+    const visitsMap = stats.reduce((acc, { date, visits }) => {
+      acc[date] = visits
+      return acc
+    }, {})
+
+    const filledStats = dates.map(date => ({
+      date,
+      visits: visitsMap[date] || 0
+    }))
+
     return res.status(200).json({
-      content: stats,
+      content: filledStats,
       message: 'Visit counts by date retrieved successfully'
     })
   } catch (error) {
